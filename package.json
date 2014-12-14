@@ -5,8 +5,8 @@
     "description": "A FreshRSS Notifier for smart people \n N'oubliez pas d'activer l'api \n siteweb : https://purexo.eu/ \n addons : https://addons.mozilla.org/fr/firefox/user/ptheo93/",
     "homepage": "https://github.com/purexo/FreshRSS-Notify",
     "author": "Purexo",
-    "license": "MPL 2.0",
-    "version": "0.1",
+    "license": "GPL 3",
+    "version": "0.2",
 
     "preferences": [
     {
@@ -32,7 +32,7 @@
     {
         "type": "integer",
         "name": "delay",
-        "value": "15",
+        "value": 15,
         "title": "delay d'actualisation automatique :",
         "description": "exprimé en minutes"
     },
@@ -40,14 +40,14 @@
         "type": "string",
         "name": "badgeEmpty",
         "value": "green",
-        "title": "Color 0 unread:",
+        "title": "Color 0 unread : ",
         "hidden": true
     },
     {
         "type": "string",
         "name": "badgeNotEmpty",
         "value": "red",
-        "title": "Color many unread",
+        "title": "Color many unread : ",
         "hidden": true
     }
     ]
