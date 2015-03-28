@@ -9,46 +9,46 @@
     "version": "0.2",
 
     "preferences": [
-    {
-        "type": "string",
-        "name": "url",
-        "value": "http(s)://domai.ne/path/to/FreshRSS/",
-        "title": "URL :",
-        "description": "l'adresse de l'instance de FreshRSS utilisé"
-    },
-    {
-        "type": "string",
-        "name": "login",
-        "value": "Login",
-        "title": "Login :"
-    },
-    {
-        "type": "string",
-        "name": "password",
-        "value": "password",
-        "title": "Password :",
-        "description": "Password de votre compte pour l'api"
-    },
-    {
-        "type": "integer",
-        "name": "delay",
-        "value": 15,
-        "title": "delay d'actualisation automatique :",
-        "description": "exprimé en minutes"
-    },
-    {
-        "type": "string",
-        "name": "badgeEmpty",
-        "value": "green",
-        "title": "Color 0 unread : ",
-        "hidden": true
-    },
-    {
-        "type": "string",
-        "name": "badgeNotEmpty",
-        "value": "red",
-        "title": "Color many unread : ",
-        "hidden": true
-    }
+        {
+            "name": "url",
+            "type": "string",
+            "value": "http(s)://domai.ne/path/to/FreshRSS/",
+            "title": "URL :",
+            "description": "l'adresse de l'instance de FreshRSS utilisé"
+        },
+        {
+            "name": "login",
+            "type": "string",
+            "value": "Login",
+            "title": "Login :"
+        },
+        {
+            "name": "password",
+            "type": "string",
+            "value": "password",
+            "title": "Password :",
+            "description": "Password de votre compte pour l'api"
+        },
+        {
+            "name": "delay",
+            "type": "integer",
+            "value": 15,
+            "title": "delay d'actualisation automatique :",
+            "description": "exprimé en minutes"
+        },
+        {
+            "name": "badgeNoError",
+            "type": "string",
+            "value": "green",
+            "title": "Color 0 unread : ",
+            "hidden": true
+        },
+        {
+            "name": "badgeError",
+            "type": "string",
+            "value": "red",
+            "title": "Color many unread : ",
+            "hidden": true
+        }
     ]
 }
