@@ -151,6 +151,21 @@ panel.port.on("refresh", refresh)
 panel.port.on('open-rss', () => {
     tabs.open(preferences.url);
 })
+panel.port.on('parse-html', (data) => {
+    // data html, idRSS
+    /**
+    * @author : A FUCKING THANKS TO YOU Wladimir Palant : http://stackoverflow.com/a/13303591
+    */
+    let { Cc, Ci } = require("chrome");
+    var parser = Cc["@mozilla.org/parserutils;1"].getService(Ci.nsIParserUtils);
+    let html = parser.sanitize(data.html, parser.SanitizerAllowComments);
+
+    let sendData = {
+        idRSS: data.idRSS,
+        html: html
+    }
+    panel.port.emit('parse-html', sendData);
+})
 
 /**
 * Refresh régulier

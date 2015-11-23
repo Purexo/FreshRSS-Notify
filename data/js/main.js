@@ -12,6 +12,16 @@ self.port.on('mainlink', (link) => {
 })
 
 /**
+ * @author : Taken from https://stackoverflow.com/questions/683366/remove-all-the-children-dom-elements-in-div
+ * @param node : Dom Element where you want delete all children node
+ */
+function removeAllChildren(node){
+  while (node.hasChildNodes()) {
+    node.removeChild(node.lastChild);
+  }
+}
+
+/**
 * 1. Force l'actualisation des flux
 * 2. Récupère le nombre flux non lus et les 5 derniers items (titre lien résumé) non lu
 * 3. Actualise le bouton unreads pour afficher le bon nombre
@@ -22,32 +32,49 @@ let evtRefresh = function evtRefresh () {
     self.port.emit('refresh', null)
 }
 self.port.on('refresh-nbunread', (nbunread) => {
-    btnUnreads.innerHTML = nbunread
+    removeAllChildren(btnUnreads)
+    var nodeNbUnread = document.createTextNode(nbunread)
+    btnUnreads.appendChild(nodeNbUnread)
 })
 self.port.on('refresh-additem', (data) => {
     // data.id data.link data.title data.content data.isRead
     var itemrss = document.getElementsByClassName('item-rss')[data.id]
     var header = itemrss.getElementsByClassName('header')[0]
 
+    // title of article
     var titleNode = header.getElementsByTagName('span')[0]
-    var newTitleNode = document.createTextNode(data.title); // + (data.isRead ? " (Lu)" : " (Non lu)")
+    var newTitleNode = document.createTextNode(data.title);
     titleNode.removeChild(titleNode.childNodes[0]);
     titleNode.appendChild(newTitleNode);
-    //titleNode.childNodes[0] = newTitleNode;
 
+    // link of article
     var linkNode = header.getElementsByTagName('a')[0]
     linkNode.href = data.link
     linkNode.target = "_blank"
 
+    // state of article
     var imgTitleNode = header.getElementsByTagName('img')[0]
-    //var imgTitleNode = document.createElement('img')
     imgTitleNode.src = data.isRead ? '../img/panel/read.svg' : '../img/panel/unread.svg';
     imgTitleNode.itemid = data.itemid;
-    //linkNode.insertBefore(imgTitleNode, titleNode)
 
+    // content of article
     var contentNode = itemrss.getElementsByTagName('p')[0]
-    contentNode.innerHTML = data.content;
+    removeAllChildren(contentNode);
+    var sendData = {
+        html: data.content,
+        idRSS: data.id
+    }
+    self.port.emit('parse-html', sendData)
+})
+self.port.on('parse-html', (data) => {
+    //data.idRSS data.newNode
+    var itemrss = document.getElementsByClassName('item-rss')[data.idRSS]
+    var contentNode = itemrss.getElementsByTagName('p')[0]
+    var newContentNode = new DOMParser().parseFromString(data.html, 'text/html')
 
+    for (element of newContentNode.body.childNodes) {
+        contentNode.appendChild(element);
+    }
 })
 
 /**

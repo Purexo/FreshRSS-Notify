@@ -12,6 +12,13 @@ petite édition à faire dans greader.php
 - button : https://www.google.com/design/spec/components/buttons.html#buttons-flat-raised-buttons
     - Flat Dark/Dark theme : pour les boutons de la barre du haut
 
+# Not Use innerHTML:
+- https://developer.mozilla.org/en-US/Add-ons/Overlay_Extensions/XUL_School/DOM_Building_and_HTML_Insertion#Safely_Using_Remote_HTML
+- https://developer.mozilla.org/fr/docs/Web/API/DOMParser#Browser_compatibility
+- https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIParserUtils#sanitize%28%29
+- http://stackoverflow.com/a/13303591
+- http://stackoverflow.com/a/3104237
+
 # Greader API
 
 ## Authentification (GET)
