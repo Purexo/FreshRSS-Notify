@@ -6,6 +6,8 @@ this v2 is a total rework of the v1 and it now include a panel
 
 # L'add-on
 * [release's list](https://github.com/purexo/FreshRSS-Notify/releases)
+* [Now on Firefox addon's page](https://addons.mozilla.org/fr/firefox/addon/freshrss-notify/)
+	* waiting review for now
 
 ### Instalation :
 * about:addons in Firefox's adress bar
