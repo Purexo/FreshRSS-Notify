@@ -4,7 +4,16 @@ let notifications = require("sdk/notifications");
 let querystring = require("sdk/querystring");
 let tabs = require("sdk/tabs");
 var _ = require("sdk/l10n").get;
-let preferences = require("sdk/simple-prefs").prefs;
+let prefs = require("sdk/simple-prefs");
+let preferences = prefs.prefs;
+
+/**
+* @author : A FUCKING THANKS TO YOU Wladimir Palant : http://stackoverflow.com/a/13303591
+*/
+let { Cc, Ci } = require("chrome");
+var parser = Cc["@mozilla.org/parserutils;1"].getService(Ci.nsIParserUtils);
+/* --- Really Thank You --- */
+
 let UI = require("ui.js");
 // require('set-login.js');
 
@@ -26,9 +35,8 @@ function nullAuth(prefName) {
 function normalizeUserURL() { // l'URL doi finir par un slash
     let url = preferences.url;
     preferences.url = !url.endsWith("/") ? url + "/" : url;
-    panel.port.emit('mainlink', preferences.url)
-    nullAuth()
-    // console.log(preferences.url);
+    panel.port.emit('mainlink', preferences.url);
+    nullAuth();
 }
 normalizeUserURL();
 
@@ -39,7 +47,7 @@ function error(title, text) {
         text: text,
         iconURL: self.data.url('img/button/error.png')
     });
-    button.icon = self.data.url('img/button/error.png')
+    button.icon = self.data.url('img/button/error.png');
     button.badge = 0;
     button.badgeColor = button.BAD;
 }
@@ -51,7 +59,7 @@ function refresh() {
         connect(true);
 }
 function connect(fetchrss) {
-    let url = getAPI() + "/accounts/ClientLogin?Email=" + preferences.login + "&Passwd=" + preferences.password
+    let url = getAPI() + "/accounts/ClientLogin?Email=" + preferences.login + "&Passwd=" + preferences.password;
     Request({
         url: url,
         onComplete: (response) => {
@@ -62,7 +70,7 @@ function connect(fetchrss) {
                 if (fetchrss) getFlux();
             } else {
                 console.error("connect onComplete : fail");
-                error(_("Impossible connexion"), _("Check your ids or instance URL"))
+                error(_("Impossible connexion"), _("Check your ids or instance URL"));
             }
         }
     }).get();
@@ -71,10 +79,10 @@ function getFlux() {
     function getStreamContent(nb, startindex, filter, isRead) {
         nb = nb ? nb : 5;
         if (nb === 0) return null;
-        nb = encodeURI("&n=" + nb)
+        nb = encodeURI("&n=" + nb);
         startindex = startindex ? startindex : 0;
-        filter = filter ? filter : "xt=user/-/state/com.google/read"
-        filter = encodeURI("&" + filter)
+        filter = filter ? filter : "xt=user/-/state/com.google/read";
+        filter = encodeURI("&" + filter);
         isRead = isRead ? isRead : false;
 
         let streamContent = Request({
@@ -88,11 +96,13 @@ function getFlux() {
                     let length = items.length;
                     for (let i = 0; i < length; i++) {
                         let item = items[i];
+                        let html = parser.sanitize(item.summary.content, parser.SanitizerAllowComments);
                         let rss = {
                             'id' : i + startindex,
                             'link' : item.alternate[0].href,
                             'title' : item.title,
-                            'content' : item.summary.content,
+                            'originTitle' : item.origin.title,
+                            'content' : html,
                             'isRead' : isRead,
                             'itemid' : item.id
                         }
@@ -100,7 +110,7 @@ function getFlux() {
                     }
                 }
                 else {
-                    console.error('StreamContent : Echec !\n', response.text)
+                    console.error('StreamContent : Echec !\n', response.text);
                 }
             }
         }).get()
@@ -117,25 +127,29 @@ function getFlux() {
                 let nbunread = json.max;
 
                 // lance un event pour la page client
-                panel.port.emit('refresh-nbunread', _('unread x', nbunread))
+                panel.port.emit('refresh-nbunread', _('unread x', nbunread));
 
                 let nbfetchunread = nbunread > 5 ? 5 : nbunread;
                 // fetch unreads
-                getStreamContent(nbfetchunread)
+                getStreamContent(nbfetchunread);
                 // fetch read
-                getStreamContent(5 - nbfetchunread, nbfetchunread, "xt=user/-/state/com.google/unread", true)
+                getStreamContent(5 - nbfetchunread, nbfetchunread, "xt=user/-/state/com.google/unread", true);
 
                 // feedback
                 button.icon = self.data.url('img/button/icon.png');
                 button.badge = nbunread;
-                button.badgeColor = nbunread > 0 ? button.BAD : button.OK;
-                notifications.notify({
-                    title: _('You have x unreads articles', nbunread),
-                    iconURL: self.data.url('img/button/icon.png'),
-                    onClick: (data) => {
-                        tabs.open(preferences.url + "p/i");
-                    }
-                });
+                if (nbunread > 0) {
+                    button.badgeColor = button.BAD;
+                    notifications.notify({
+                        title: _('You have x unreads articles', nbunread),
+                        iconURL: self.data.url('img/button/icon.png'),
+                        onClick: (data) => {
+                            tabs.open(preferences.url + "p/i");
+                        }
+                    });
+                } else {
+                    button.badgeColor = button.OK;
+                }
             } else {
                 console.error("unreadComplete : echec ! \n" + text);
                 error(_('Request Fail, Impossible to fetch unreads count'),text);
@@ -147,25 +161,10 @@ function getFlux() {
 /**
 * écoute du contentScriptFile du panel
 */
-panel.port.on("refresh", refresh)
+panel.port.on("refresh", refresh);
 panel.port.on('open-rss', () => {
     tabs.open(preferences.url);
-})
-panel.port.on('parse-html', (data) => {
-    // data html, idRSS
-    /**
-    * @author : A FUCKING THANKS TO YOU Wladimir Palant : http://stackoverflow.com/a/13303591
-    */
-    let { Cc, Ci } = require("chrome");
-    var parser = Cc["@mozilla.org/parserutils;1"].getService(Ci.nsIParserUtils);
-    let html = parser.sanitize(data.html, parser.SanitizerAllowComments);
-
-    let sendData = {
-        idRSS: data.idRSS,
-        html: html
-    }
-    panel.port.emit('parse-html', sendData);
-})
+});
 
 /**
 * Refresh régulier
@@ -173,21 +172,29 @@ panel.port.on('parse-html', (data) => {
 let { setTimeout, clearTimeout } = require("sdk/timers");
 let idTimeOut;
 function loop() {
-    refresh()
-    idTimeOut = setTimeout(loop, preferences.delay * 60 * 1000)
+    refresh();
+    idTimeOut = setTimeout(loop, preferences.delay * 60 * 1000);
 }
-loop()
+loop();
 
 function resetLoop() {
-    clearTimeout(idTimeOut)
-    loop()
+    clearTimeout(idTimeOut);
+    loop();
 }
 
 /**
 * écoute des préférences
 */
-require("sdk/simple-prefs").on("url", normalizeUserURL);
-require("sdk/simple-prefs").on("api", nullAuth);
-require("sdk/simple-prefs").on("login", nullAuth);
-require("sdk/simple-prefs").on("password", nullAuth);
-require("sdk/simple-prefs").on("delay", resetLoop);
+prefs.on("url", normalizeUserURL);
+prefs.on("api", nullAuth);
+prefs.on("login", nullAuth);
+prefs.on("password", nullAuth);
+prefs.on("delay", resetLoop);
+prefs.on("height", () => {
+    panel.height = preferences.height;
+});
+prefs.on("width", () => {
+    panel.width = preferences.width;
+});
+panel.height = preferences.height;
+panel.width = preferences.width;

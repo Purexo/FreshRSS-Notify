@@ -7,8 +7,8 @@ let btnUnreads = document.getElementById('btn-unreads');
 
 let mainLink = document.getElementById('mainLink');
 self.port.on('mainlink', (link) => {
-    mainLink.href = link
-    mainLink.target = "_blank"
+    mainLink.href = link;
+    mainLink.target = "_blank";
 })
 
 /**
@@ -29,17 +29,17 @@ function removeAllChildren(node){
 */
 let evtRefresh = function evtRefresh () {
     // lancé quand on clic sur le bouton refresh.
-    self.port.emit('refresh', null)
+    self.port.emit('refresh', null);
 }
 self.port.on('refresh-nbunread', (nbunread) => {
-    removeAllChildren(btnUnreads)
-    var nodeNbUnread = document.createTextNode(nbunread)
-    btnUnreads.appendChild(nodeNbUnread)
+    removeAllChildren(btnUnreads);
+    var nodeNbUnread = document.createTextNode(nbunread);
+    btnUnreads.appendChild(nodeNbUnread);
 })
 self.port.on('refresh-additem', (data) => {
     // data.id data.link data.title data.content data.isRead
-    var itemrss = document.getElementsByClassName('item-rss')[data.id]
-    var header = itemrss.getElementsByClassName('header')[0]
+    var itemrss = document.getElementsByClassName('item-rss')[data.id];
+    var header = itemrss.getElementsByClassName('header')[0];
 
     // title of article
     var titleNode = header.getElementsByTagName('span')[0]
@@ -48,30 +48,23 @@ self.port.on('refresh-additem', (data) => {
     titleNode.appendChild(newTitleNode);
 
     // link of article
-    var linkNode = header.getElementsByTagName('a')[0]
-    linkNode.href = data.link
-    linkNode.target = "_blank"
+    var linkNode = header.getElementsByTagName('a')[0];
+    linkNode.setAttribute('href', data.link);
+    linkNode.setAttribute('alt', data.originTitle);
+    linkNode.setAttribute('target', "_blank");
 
     // state of article
-    var imgTitleNode = header.getElementsByTagName('img')[0]
-    imgTitleNode.src = data.isRead ? '../img/panel/read.svg' : '../img/panel/unread.svg';
-    imgTitleNode.itemid = data.itemid;
+    var imgTitleNode = header.getElementsByTagName('img')[0];
+    imgTitleNode.setAttribute('src', data.isRead ? '../img/panel/read.svg' : '../img/panel/unread.svg');
+    imgTitleNode.setAttribute('itemid', data.itemid);
+    imgTitleNode.setAttribute('isRead', data.isRead);
+    imgTitleNode.setAttribute('onClick', self.port.emit('mark-swap', ({itemid: this.itemid, isRead: this.isRead})));
 
     // content of article
-    var contentNode = itemrss.getElementsByTagName('p')[0]
+    var contentNode = itemrss.getElementsByTagName('p')[0];
     removeAllChildren(contentNode);
-    var sendData = {
-        html: data.content,
-        idRSS: data.id
-    }
-    self.port.emit('parse-html', sendData)
-})
-self.port.on('parse-html', (data) => {
-    //data.idRSS data.newNode
-    var itemrss = document.getElementsByClassName('item-rss')[data.idRSS]
-    var contentNode = itemrss.getElementsByTagName('p')[0]
-    var newContentNode = new DOMParser().parseFromString(data.html, 'text/html')
 
+    var newContentNode = new DOMParser().parseFromString(data.content, 'text/html');
     for (element of newContentNode.body.childNodes) {
         contentNode.appendChild(element);
     }

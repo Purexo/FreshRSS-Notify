@@ -90,9 +90,11 @@ header button:active {
     flex-grow: 1;
     display: flex;
     justify-content: space-between;
+    align-content: space-between;
     flex-direction: column;
     box-shadow: 0px 0px 5px 0px #212121;
     border: 1px solid #494949;
+    min-height: 7.5em;
 }
 a {
     color: #0062BD;
@@ -117,15 +119,19 @@ a:visited, a:hover {
     font-size: 1.25em;
     font-weight: 700;
 }
+.item-rss img {
+    max-width: 100%;
+    height: auto;
+}
 .item-rss .header img {
     margin-right: 5px;
 }
 .item-rss p {
     margin: 0px;
     padding: 0px;
-    max-height: 4em;
-    overflow: hidden;
-    text-overflow: ellipsis;
+}
+.item-rss > p {
+    margin-top: 1em;
 }
 footer {
     white-space: pre-line;

@@ -1,7 +1,7 @@
 {
   "title": "FreshRSS-Notify",
   "name": "freshrss-notify",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A FreshRSS Notifier for smart people \n don't forget to activate the api on your FreshRSS server",
   "main": "index.js",
   "author": "Purexo",
@@ -36,46 +36,28 @@
           "type": "string",
           "value": "password",
           "title": "Password API:",
-          "description": "Password de votre compte pour l'api"
+          "description": "API Password of your account"
       },
       {
           "name": "delay",
           "type": "integer",
           "value": 15,
-          "title": "delay d'actualisation automatique :",
-          "description": "exprimé en minutes"
+          "title": "automatic actualisation delay :",
+          "description": "in minutes"
       },
       {
-        "name": "lang",
-        "type": "menulist",
-        "value": "en-US",
-        "title": "Choose your language",
-        "description": "Change on Reboot",
-        "options": [
-            {
-                "value": "en-US",
-                "label": "American"
-            },
-            {
-                "value": "fr-FR",
-                "label": "Français"
-            }
-        ],
-        "hidden": true
+          "name": "height",
+          "type": "integer",
+          "value": 600,
+          "title": "Panel's height",
+          "description": "in px"
       },
       {
-          "name": "badgeNoError",
-          "type": "string",
-          "value": "green",
-          "title": "Color 0 unread : ",
-          "hidden": true
-      },
-      {
-          "name": "badgeError",
-          "type": "string",
-          "value": "red",
-          "title": "Color many unread : ",
-          "hidden": true
+          "name": "width",
+          "type": "integer",
+          "value": 600,
+          "title": "Panel's width",
+          "description": "in px"
       }
   ],
   "license": "GPL 3"
