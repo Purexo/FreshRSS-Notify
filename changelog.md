@@ -1,3 +1,12 @@
+# 2.0.3
+- Code Improvement :
+    - use exports.onReady and onUnload on Addon (thx @ZatsuneNoMoku)
+    - use EventListener instead onClick attribute
+    - in content script : use let instead var
+- Fonctionalities
+    - Can now click on image to switch item state (read/unread)
+        - it will call api and update item
+
 # 2.0.2
 - Code improvement :
     - content rss are sanitize before is sent to content script

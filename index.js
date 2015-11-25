@@ -4,6 +4,7 @@ let notifications = require("sdk/notifications");
 let querystring = require("sdk/querystring");
 let tabs = require("sdk/tabs");
 var _ = require("sdk/l10n").get;
+let { setTimeout, clearTimeout } = require("sdk/timers");
 let prefs = require("sdk/simple-prefs");
 let preferences = prefs.prefs;
 
@@ -38,7 +39,6 @@ function normalizeUserURL() { // l'URL doi finir par un slash
     panel.port.emit('mainlink', preferences.url);
     nullAuth();
 }
-normalizeUserURL();
 
 function error(title, text) {
     console.error(title, text);
@@ -166,16 +166,48 @@ panel.port.on('open-rss', () => {
     tabs.open(preferences.url);
 });
 
+panel.port.on('mark-swap', (data) => {
+    // data.itemid data.isRead
+    function swapeState(token, itemid, isRead, index) {
+        let req = 'i=' + encodeURI('tag:google.com,2005:reader/item/' + itemid) + '&';
+        req += 'T=' + token + '&';
+        req += isRead ?
+               'r=' + encodeURI('user/-/state/com.google/read') :
+               'a=' + encodeURI('user/-/state/com.google/read');
+        Request({
+            url: getAPI() + '/reader/api/0/edit-tag',
+            content: req,
+            headers: getAuth(),
+            onComplete: (rep) => {
+                panel.port.emit('mark-swap', index);
+                button.badge += isRead ? 1 : -1;
+                panel.port.emit('refresh-nbunread', _('unread x', button.badge));
+            }
+        }).post();
+    }
+
+    Request({
+        url: getAPI() + '/reader/api/0/token',
+        headers: getAuth(),
+        onComplete: (response) => {
+            if (response.status == 200) { // OK
+                swapeState(response.text, data.itemid, data.isRead, data.index);
+            } else {
+                error(_("Can't get Token"), _("check your ids"));
+                // nullAuth();
+            }
+        }
+    }).get();
+});
+
 /**
 * Refresh régulier
 */
-let { setTimeout, clearTimeout } = require("sdk/timers");
 let idTimeOut;
 function loop() {
     refresh();
     idTimeOut = setTimeout(loop, preferences.delay * 60 * 1000);
 }
-loop();
 
 function resetLoop() {
     clearTimeout(idTimeOut);
@@ -196,5 +228,17 @@ prefs.on("height", () => {
 prefs.on("width", () => {
     panel.width = preferences.width;
 });
-panel.height = preferences.height;
-panel.width = preferences.width;
+
+/**
+ * Load and Unload Addon
+ */
+exports.main = (reason, callback) => {
+    panel.height = preferences.height;
+    panel.width = preferences.width;
+    normalizeUserURL();
+    loop();
+    callback();
+}
+exports.onUnload = (reason) => {
+    clearTimeout(idTimeOut);
+}

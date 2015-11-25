@@ -85,6 +85,20 @@ user%2F-%2Fstate%2Fcom.google%2Fread?
 }
 ```
 
+# Mark As read/unread
+- https://github.com/theoldreader/api#updating-items
+- https://purexo.eu/FreshRSS/p/api/greader.php/reader/api/0/edit-tag
+- https://github.com/mihaip/google-reader-api/blob/master/wiki/ActionToken.wiki
+- https://purexo.eu/FreshRSS/p/api/greader.php/reader/api/0/token (with header authentication)
+    - dcefb962b6eece82377532092019cfe8db543650ZZZZZZZZZZZZZZZZZ
+
+```
+i=tag:google.com,2005:reader/item/00052549fa81c1a7                              # Select item
+a=user/-/state/com.google/read                                                  # Mark as read
+r=user/-/state/com.google/read                                                  # Mark as unread
+T=Token                                                                         # Get with /reader/api/0/token
+```
+
 ## List ID (GET)
 - https://purexo.eu/FreshRSS/p/api/greader.php/reader/api/0/stream/items/ids?output=json
 

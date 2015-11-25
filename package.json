@@ -1,7 +1,7 @@
 {
   "title": "FreshRSS-Notify",
   "name": "freshrss-notify",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A FreshRSS Notifier for smart people \n don't forget to activate the api on your FreshRSS server",
   "main": "index.js",
   "author": "Purexo",
