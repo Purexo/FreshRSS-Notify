@@ -1,6 +1,6 @@
 # 2.0.3
 - Code Improvement :
-    - use exports.onReady and onUnload on Addon (thx @ZatsuneNoMoku)
+    - use exports.main and onUnload on Addon (thx @ZatsuneNoMoku)
     - use EventListener instead onClick attribute
     - in content script : use let instead var
 - Fonctionalities
