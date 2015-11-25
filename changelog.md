@@ -30,4 +30,5 @@
     - set the panel's size
 - Panel improvement :
     - better css, why just print 3 lines of an article when you can scroll
+    - img in content flux have now max-width: 100%;
     - panel print all content of article
