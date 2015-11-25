@@ -15,6 +15,9 @@ this v2 is a total rework of the v1 and it now include a panel
 * select the .xpi download
 	* Don't forget to activate API, and set your password API in your instance of FreshRSS
 	* And set your module option
+	
+### Changelog :
+You'll found changelog since v2.0.2 [here](changelog.md)
 
 # Compile from sources :
 ### Prerequire
