@@ -1,3 +1,7 @@
+#2.0.4
+- Bugfix :
+    - Link in panel are now all target \_blank
+
 # 2.0.3
 - Code Improvement :
     - use exports.main and onUnload on Addon (thx @ZatsuneNoMoku)
