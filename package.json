@@ -1,7 +1,7 @@
 {
   "title": "FreshRSS-Notify",
   "name": "freshrss-notify",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "A FreshRSS Notifier for smart people \n don't forget to activate the api on your FreshRSS server",
   "main": "index.js",
   "author": "Purexo",
@@ -14,16 +14,16 @@
       {
           "name": "url",
           "type": "string",
-          "value": "http://example.com/FreshRSS",
+          "value": "http://example.com/FreshRSS/",
           "title": "URL :",
           "description": "l'adresse de l'instance de FreshRSS utilisé"
       },
       {
           "name": "api",
           "type": "string",
-          "value": "p/api/greader.php",
+          "value": "http://example.com/FreshRSS/p/api/",
           "title": "URL API :",
-          "description": "Relative path of api, you've probably nothing to change"
+          "description": "Absolute path of api"
       },
       {
           "name": "login",

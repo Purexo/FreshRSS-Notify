@@ -1,6 +1,10 @@
-#2.0.4
+#2.1.0
 - Bugfix :
     - Link in panel are now all target \_blank
+- Compatibilities
+    - /!\\ breaking changes :
+        - Now, APIUrl should be absolute and point to API Folder (http://example.com/FreshRSS/p/api/)
+            - Don't Forget to set this
 
 # 2.0.3
 - Code Improvement :

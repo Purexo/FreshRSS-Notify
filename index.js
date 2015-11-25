@@ -23,7 +23,7 @@ let button = UI.button;
 
 let auth = null;
 let getAPI = function getAPI() {
-    return preferences.url + preferences.api;
+    return preferences.api + "greader.php";
 }
 let getAuth = function getAuth() {
     return { "Authorization":"GoogleLogin auth=" + auth }
@@ -35,7 +35,9 @@ function nullAuth(prefName) {
 }
 function normalizeUserURL() { // l'URL doi finir par un slash
     let url = preferences.url;
+    let api = preferences.api;
     preferences.url = !url.endsWith("/") ? url + "/" : url;
+    preferences.api = !api.endsWith("/") ? api + "/" : api;
     panel.port.emit('mainlink', preferences.url);
     nullAuth();
 }
@@ -218,7 +220,7 @@ function resetLoop() {
 * écoute des préférences
 */
 prefs.on("url", normalizeUserURL);
-prefs.on("api", nullAuth);
+prefs.on("api", normalizeUserURL);
 prefs.on("login", nullAuth);
 prefs.on("password", nullAuth);
 prefs.on("delay", resetLoop);
