@@ -5,17 +5,28 @@
 */
 function removeAllChildren(node){
     while (node.hasChildNodes()) {
-     node.removeChild(node.lastChild);
+        node.removeChild(node.lastChild);
     }
 }
 
 /**
+* @author Purexo <contact@purexo.eu>
+* A selector System like jquery with native javascript
+* @param query : <string> It's the query string, same as CSS
+* usage :
+*   let nodes = $$('.test') return all elements who have class test atributes
+*   let node  = $('#test') return first element who have id test atributes
+*/
+let $ = (query) => { return document.querySelector(query);};
+let $$ = (query) => { return document.querySelectorAll(query);};
+
+/**
 * Définition des boutons
 */
-let btnRefresh = document.getElementById('btn-refresh');
-let btnUnreads = document.getElementById('btn-unreads');
+let btnRefresh = $('#btn-refresh');
+let btnUnreads = $('#btn-unreads');
 
-let mainLink = document.getElementById('mainLink');
+let mainLink = $('#mainLink');
 self.port.on('mainlink', (link) => {
     mainLink.href = link;
     mainLink.target = "_blank";
@@ -37,30 +48,40 @@ let evtUnreads = function evtUnreads () {
 
 // Actualise le bouton pour savoir combien il y a de flux non lus
 self.port.on('refresh-nbunread', (nbunread) => {
+    /*
     removeAllChildren(btnUnreads);
+    let nodeIconUnread = document.createElement(i);
+    nodeIconUnread.className = 'material-icons';
+    let nodeIconUnreadText = document.createTextNode('markunread');
+    nodeIconUnread.appendChild(nodeIconUnreadText);
+    btnUnreads.appendChild(nodeIconUnread);
+
     let nodeNbUnread = document.createTextNode(nbunread);
     btnUnreads.appendChild(nodeNbUnread);
+    /**/
+    btnUnreads.innerHTML = `<i class="material-icons">markunread</i> ${parseInt(nbunread, 10)}`;
+    // sorry, innerHTML work as expected...
 })
 // met à jours les cards : affiche les 5 derniers flux (en priorisant les non lus)
 self.port.on('refresh-additem', (data) => {
     // data.id data.link data.title data.content data.isRead
-    let itemrss = document.getElementsByClassName('item-rss')[data.id];
-    let header = itemrss.getElementsByClassName('header')[0];
+    let itemrss = $$('.item-rss')[data.id];
+    let header = itemrss.querySelector('.header');
 
     // title of article
-    let titleNode = header.getElementsByTagName('span')[0]
+    let titleNode = header.querySelector('span');
     let newTitleNode = document.createTextNode(data.title);
     titleNode.removeChild(titleNode.childNodes[0]);
     titleNode.appendChild(newTitleNode);
 
     // link of article
-    let linkNode = header.getElementsByTagName('a')[0];
+    let linkNode = header.querySelector('a');
     linkNode.setAttribute('href', data.link);
     linkNode.setAttribute('alt', data.originTitle);
     linkNode.setAttribute('target', "_blank");
 
     // state of article
-    let imgTitleNode = header.getElementsByTagName('img')[0];
+    let imgTitleNode = header.querySelector('img');
     imgTitleNode.setAttribute('src', data.isRead ? '../img/panel/read.svg' : '../img/panel/unread.svg');
     imgTitleNode.setAttribute('itemid', data.itemid);
     imgTitleNode.setAttribute('isRead', data.isRead);
@@ -68,33 +89,58 @@ self.port.on('refresh-additem', (data) => {
     imgTitleNode.isRead = data.isRead;
 
     // content of article
-    let contentNode = itemrss.getElementsByTagName('p')[0];
+    let contentNode = itemrss.querySelector('p');
     removeAllChildren(contentNode);
 
     let newContentNode = new DOMParser().parseFromString(data.content, 'text/html');
+    contentNode.innerHTML = newContentNode.body.innerHTML; // don't have choice, other methods don't work properly
+    /*
     for (element of newContentNode.body.childNodes) {
         contentNode.appendChild(element);
     }
+    */
+    for (let item of contentNode.querySelectorAll('a')) {
+        item.target = '_blank';
+    }
 })
 
-let markNode = [];
 /**
 * === Gestion des Listener ===
 */
 btnRefresh.addEventListener('click', evtRefresh, false);
 btnUnreads.addEventListener('click', evtUnreads, false);
 
-let imgs = document.getElementsByClassName('state');
+let markNodeList = [];
+let imgs = $$('#items-rss > .item-rss > .header > img.state');
 let length = imgs.length;
 for (let i = 0; i < length; i++) {
     let img = imgs[i];
-    markNode[i] = img;
-    img.addEventListener('click', () => {
+    markNodeList[i] = img;
+    let func = () => {
         self.port.emit('mark-swap', ({itemid: img.itemid, isRead: img.isRead, index: i}))
-    }, false);
+    }
+    img.func = func;
+    img.addEventListener('click', func, false);
 }
 self.port.on('mark-swap', (index) => {
-    let img = document.getElementsByClassName('state')[index]
+    let img = $$('#items-rss > .item-rss > .header > img.state')[index];
     img.setAttribute('src', img.isRead ? '../img/panel/unread.svg' : '../img/panel/read.svg');
     img.isRead = !img.isRead;
+});
+
+function removeImgEventListener() {
+    let length = markNodeList.length;
+    for (let i = 0; i < length; i++) {
+        let img = markNodeList[i];
+        img.removeEventListener('click', img.func, false);
+        delete img.func;
+    }
+}
+function removeAllEventListener() {
+    removeImgEventListener();
+    btnRefresh.removeEventListener('click', evtRefresh, false);
+    btnUnreads.removeEventListener('click', evtUnreads, false);
+}
+self.port.on('remove-all-evt-listener', () => {
+    removeAllEventListener();
 });

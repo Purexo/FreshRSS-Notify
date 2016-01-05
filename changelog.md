@@ -1,4 +1,19 @@
-#2.1.0
+# 2.1.1
+- Bugfix :
+    - hardcode add some unlogical when open FreshRSS instance ('/p/i') with new url system, we don't need to add this
+    - use local img instead hotlink FreshRSS Logo
+    - all imported link (from rss stream) are now target \_blank
+- Code :
+    - use querySelector insteal getElement...
+    - use $ for document.querySelector and $$ for document.querySelectorAll
+- Improvements :
+    - The Addon can unload EventListener when shutdown/desactivate
+    - parser and sanitizer work well, but should use innerHTML twice, really don't have choice.
+        - Now with innerHTML, I don't have any bug with pictures or link who don't appear.
+    - replace some text in panel to icon.
+    - Add .jpmignore (don't package useless assets)
+
+# 2.1.0
 - Bugfix :
     - Link in panel are now all target \_blank
 - Compatibilities

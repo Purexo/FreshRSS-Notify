@@ -98,7 +98,9 @@ function getFlux() {
                     let length = items.length;
                     for (let i = 0; i < length; i++) {
                         let item = items[i];
+                        // let html = parser.sanitize(item.summary.content, parser.SanitizerAllowComments);
                         let html = parser.sanitize(item.summary.content, parser.SanitizerAllowComments);
+                        // let html = parser.convertToPlainText(item.summary.content, parser.SanitizerAllowComments, 0);
                         let rss = {
                             'id' : i + startindex,
                             'link' : item.alternate[0].href,
@@ -129,7 +131,8 @@ function getFlux() {
                 let nbunread = json.max;
 
                 // lance un event pour la page client
-                panel.port.emit('refresh-nbunread', _('unread x', nbunread));
+                // panel.port.emit('refresh-nbunread', _('unread x', nbunread));
+                panel.port.emit('refresh-nbunread', nbunread);
 
                 let nbfetchunread = nbunread > 5 ? 5 : nbunread;
                 // fetch unreads
@@ -146,7 +149,7 @@ function getFlux() {
                         title: _('You have x unreads articles', nbunread),
                         iconURL: self.data.url('img/button/icon.png'),
                         onClick: (data) => {
-                            tabs.open(preferences.url + "p/i");
+                            tabs.open(preferences.url);
                         }
                     });
                 } else {
@@ -183,7 +186,8 @@ panel.port.on('mark-swap', (data) => {
             onComplete: (rep) => {
                 panel.port.emit('mark-swap', index);
                 button.badge += isRead ? 1 : -1;
-                panel.port.emit('refresh-nbunread', _('unread x', button.badge));
+                // panel.port.emit('refresh-nbunread', _('unread x', button.badge));
+                panel.port.emit('refresh-nbunread', button.badge);
             }
         }).post();
     }
@@ -243,4 +247,5 @@ exports.main = (reason, callback) => {
 }
 exports.onUnload = (reason) => {
     clearTimeout(idTimeOut);
+    panel.port.emit('remove-all-evt-listener')
 }

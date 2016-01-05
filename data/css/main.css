@@ -133,6 +133,9 @@ a:visited, a:hover {
 .item-rss > p {
     margin-top: 1em;
 }
+#items-rss > .item-rss > .header > img.state {
+    cursor: pointer;
+}
 footer {
     white-space: pre-line;
     background-color: #212121;

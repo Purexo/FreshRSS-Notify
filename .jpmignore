@@ -1,0 +1,9 @@
+/data/img/button/*.svg
+.git
+*.bat
+*.sh
+*.md
+*.xpi
+.jpmignore
+.gitignore
+LICENSE
