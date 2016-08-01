@@ -1,7 +1,7 @@
 {
   "title": "FreshRSS-Notify",
   "name": "freshrss-notify",
-  "version": "2.1.1",
+  "version": "2.1.3",
   "description": "A FreshRSS Notifier for smart people \n don't forget to activate the api on your FreshRSS server",
   "main": "index.js",
   "author": "Purexo",
@@ -9,6 +9,9 @@
   "engines": {
     "firefox": ">=38.0a1",
     "fennec": ">=38.0a1"
+  },
+  "permissions": {
+    "multiprocess": false
   },
   "preferences": [
       {

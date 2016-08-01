@@ -1,3 +1,7 @@
+# 2.1.2 :
+- Bugfix :
+    - update badge color next to read/unread an item in panel.
+
 # 2.1.1
 - Bugfix :
     - hardcode add some unlogical when open FreshRSS instance ('/p/i') with new url system, we don't need to add this

@@ -186,6 +186,7 @@ panel.port.on('mark-swap', (data) => {
             onComplete: (rep) => {
                 panel.port.emit('mark-swap', index);
                 button.badge += isRead ? 1 : -1;
+                button.badgeColor = button.badge > 0 ? button.BAD : button.OK;
                 // panel.port.emit('refresh-nbunread', _('unread x', button.badge));
                 panel.port.emit('refresh-nbunread', button.badge);
             }
