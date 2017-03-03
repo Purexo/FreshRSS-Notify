@@ -19,6 +19,6 @@ browser.alarms.onAlarm(alarm => {
   if (eventNameToFire) {
       manager.fire(eventNameToFire, alarm);
   } else {
-      console.log(alarm, 'is not listened');
+      console.log(alarm, 'is not mapped');
   }
 });
