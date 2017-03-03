@@ -3,7 +3,6 @@ function getAutoRefreshTime() {
   return Promise.resolve(15);
 }
 
-const ALARM_AUTO_REFRESH = 'auto-refresh';
 function runAutoRefreshAlarm() {
   browser.alarms.clear(ALARM_AUTO_REFRESH)
     .then(cleared => getAutoRefreshTime())
@@ -15,11 +14,11 @@ function runAutoRefreshAlarm() {
 }
 
 browser.alarms.onAlarm(alarm => {
-  switch (alarm.name) {
-    case ALARM_AUTO_REFRESH:
-      // TODO refresh flux
-      break;
-    default:
+  const eventNameToFire = MAP_ALARM_TO_EVENT[alarm.name];
+
+  if (eventNameToFire) {
+      manager.fire(eventNameToFire, alarm);
+  } else {
       console.log(alarm, 'is not listened');
   }
 });
