@@ -4,13 +4,12 @@ function getAutoRefreshTime() {
 }
 
 function runAutoRefreshAlarm() {
-  browser.alarms.clear(ALARM_AUTO_REFRESH)
+  adapter.alarms.clear(ALARM_AUTO_REFRESH)
     .then(cleared => getAutoRefreshTime())
     .then(periodInMinutes =>
       browser.alarms.create(ALARM_AUTO_REFRESH, {periodInMinutes})
     )
-    .catch(err => console.error(err))
-    ;
+    .catch(err => console.error(err));
 }
 
 browser.alarms.onAlarm(alarm => {
