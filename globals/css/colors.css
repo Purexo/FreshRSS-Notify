@@ -1,0 +1,22 @@
+:root {
+  --bg-color-main: #303030; /* body */
+  --bg-color-second: #212121; /* header, footer */
+  --text-color-main: rgba(255, 255, 255, 0.8);
+  --text-color-second: rgba(255, 255, 255, 0.3);
+
+  /* --- buttons --- */
+  --button-bg-color: #4A4A4A;
+  --button-hover-bg-color: #555555;
+  --button-active-bg-color: #595959;
+  --button-text-color: #FFFFFF;
+
+  /* --- card --- */
+  --card-bg-color: #424242;
+  --card-shadow-color: #212121;
+  --card-border-color: #494949;
+
+  /* --- link --- */
+  --link-text-color: rgba(50, 159, 255, 0.8);
+  --link-accent-text-color: rgba(0, 98, 189, 0.8);
+  --link-accent-shadow-color: rgba(0, 98, 189, 0.8);
+}
