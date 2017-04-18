@@ -1,5 +1,5 @@
 {
-  "manifest_version": 1,
+  "manifest_version": 2,
   "name": "FreshRSS-Notify",
   "version": "1.0",
 
@@ -13,11 +13,11 @@
 
   "background": {
     "scripts": [
-      "background/CONSTANT.js",
+      "background/CONSTANTS.js",
       "background/lib/adapter.js",
-      "background/lib/EventManager.js",
+      "background/lib/EventsManager.js",
       "background/lib/fetch.js",
-      "background/lib/main.js"
+      "background/main.js"
     ]
   },
 
