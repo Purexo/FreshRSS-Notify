@@ -7,14 +7,15 @@
  */
 
 // short polyfill
+chrome = chrome || {};
 browser = browser || chrome;
 
 const adapter = {
-  alarms = {
+  alarms: {
     clear (name) {
       return chrome ?
         new Promise(resolve => browser.alarms.clear(name, cleared => resolve(cleared))) :
         browser.alarms.clear(name);
     }
   }
-}
+};

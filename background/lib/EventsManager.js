@@ -9,7 +9,7 @@ const manager = (function () {
     /**
      * Creates an instance of Event.
      * @param {string} name 
-     * @param {any} data 
+     * @param {*} data
      * 
      * @memberOf Event
      */
@@ -32,8 +32,7 @@ const manager = (function () {
   class EventsManager {
     /**
      * Creates an instance of EventsManager.
-     * @param {any} options
-     * @param {boolean} options.debug [options.debug=false] - if debug true, fire will log event in console.log and print trace
+     * @param {boolean} debug
      * 
      * @memberOf EventsManager
      */
@@ -47,7 +46,7 @@ const manager = (function () {
      * 
      * @param {string} name 
      * @param {Function} listener - take one arg of Event type (data when fired if defined is in it)
-     * @returns {any} listener - usefull for removeListener
+     * @returns {*} listener - usefull for removeListener
      * 
      * @example
      * manager.addListener('is-ready', ({name, data}) => console.log(`${name} fired with data :`, data))
@@ -66,7 +65,7 @@ const manager = (function () {
      * fire event, will call all listener associated with name given
      * 
      * @param {string} name 
-     * @param {any} data 
+     * @param {*} data
      * 
      * @memberOf EventsManager
      */
@@ -77,27 +76,27 @@ const manager = (function () {
       this._debug && console.log(`event ${name} is fired with data :`, data) || console.trace();
 
       dispatcher
-        .forEach(listener => typeof listener == 'function' ? listener(event) : event);
+        .forEach(listener => typeof listener === 'function' ? listener(event) : event);
     }
 
     /**
-     * remove listener associated with nameand listener given
+     * remove listener associated with name and listener given
      * 
-     * @param {any} name 
-     * @param {any} listener 
+     * @param {*} name
+     * @param {Function} listener
      * 
      * @memberOf EventsManager
      */
     removeListener(name, listener) {
       let dispatcher = this._getNameDispatcher(name);
 
-      this._dispatchers[name] = dispatcher.filter(inListener => listener != inListener);
+      this._dispatchers[name] = dispatcher.filter(inListener => listener !== inListener);
     }
 
     /**
      * remove all listener associated with name given
      * 
-     * @param {any} name 
+     * @param {*} name
      * 
      * @memberOf EventsManager
      */
@@ -143,7 +142,7 @@ const manager = (function () {
      * @private
      */
     _getNameDispatcher (name) {
-      return this._dispatchers[name] || this._initNameDispatcher();
+      return this._dispatchers[name] || this._initNameDispatcher(name);
     }
   }
 

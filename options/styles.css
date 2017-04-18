@@ -1,55 +1,62 @@
 html, body {
-  margin: 0px;
-  padding: 0px;
-  height: 100%;
-  width: 100%;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
 
-  background: var(--bg-color-main);
-  color: var(--text-color-main);
+    background: var(--bg-color-main);
+    color: var(--text-color-main);
 }
 
 h1 {
-  text-align: center;
+    text-align: center;
 }
 
 .container {
-  padding: 2em;
-  margin: 0px 1em;
-  font-size: 1.5em;
-  background: var(--card-bg-color);
-  box-shadow: 0px 0px 5px 0px var(--card-shadow-color);
-  border: solid 1px var(--card-border-color);
+    padding: 2em;
+    margin: 0px 1em;
+    font-size: 1.5em;
+    background: var(--card-bg-color);
+    box-shadow: 0px 0px 5px 0px var(--card-shadow-color);
+    border: solid 1px var(--card-border-color);
 }
 
 .row {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  padding: 0.25em;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    padding: 0.25em;
 }
 
 .col {
-  padding: 0.25em;
-  height: 100%;
+    padding: 0.25em;
+    height: 100%;
 }
 
 .col-min {
-  flex-basis: 25%;
-  text-align: right;
+    flex-basis: 25%;
+    text-align: right;
 }
 
 .col-grow {
-  flex: 1;
-  margin-left: 1em;
-  padding: 0.75em;
+    flex: 1;
+    margin-left: 1em;
+    padding: 0.75em;
 }
 
 label span.help {
-  display: block;
-  font-size: 0.5em;
+    display: block;
+    font-size: 0.5em;
 }
 
-input[type=range]::after {
-  content: "";
+input[type=range] {
+    width: calc(100% - 35px);
+}
+
+input[type=range]:after {
+    display: block;
+    position: absolute;
+    left: calc(100% - 30px);
+    content: attr(value);
 }

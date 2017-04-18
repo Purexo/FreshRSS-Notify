@@ -1,0 +1,11 @@
+{
+  "background": {
+    "scripts": [
+      "background/CONSTANT.js",
+      "background/lib/adapter.js",
+      "background/lib/EventManager.js",
+      "background/lib/fetch.js",
+      "background/lib/main.js"
+    ]
+  }
+}

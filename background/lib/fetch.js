@@ -1,3 +1,8 @@
+/**
+ * @typedef {Request} Request
+ * @see https://developer.mozilla.org/fr/docs/Web/API/Request
+ */
+
 /*
  * Helper for Fetch API 
  */
@@ -7,7 +12,7 @@ const get = {
    * 
    * @param {string|Request} url 
    * @param {object?} fetchOptions 
-   * @returns Promise.<{response: Response, text: string}>
+   * @returns Promise <{response: Response, text: string}>
    * 
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch for fetchOption
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Response for Response
@@ -29,7 +34,7 @@ const get = {
    * 
    * @param {string|Request} url 
    * @param {object?} fetchOptions 
-   * @returns Promise.<{response: Response, json: any}>
+   * @returns Promise <{response: Response, json: any}>
    * 
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch for fetchOption
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Response for Response
@@ -51,7 +56,7 @@ const get = {
    * 
    * @param {string|Request} url 
    * @param {object?} fetchOptions 
-   * @returns Promise.<{response: Response, buffer: ArrayBuffer}>
+   * @returns Promise <{response: Response, buffer: ArrayBuffer}>
    * 
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch for fetchOption
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer for ArrayBuffer
@@ -74,7 +79,7 @@ const get = {
    * 
    * @param {string|Request} url 
    * @param {object?} fetchOptions 
-   * @returns Promise.<{response: Response, blob: Blob}>
+   * @returns Promise <{response: Response, blob: Blob}>
    * 
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch for fetchOption
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Blob for Blob
@@ -97,7 +102,7 @@ const get = {
    * 
    * @param {string|Request} url 
    * @param {object?} fetchOptions 
-   * @returns Promise.<{response: Response, formData: FormData}>
+   * @returns Promise <{response: Response, formData: FormData}>
    * 
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch for fetchOption
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Blob for Blob
@@ -121,7 +126,7 @@ const get = {
    * 
    * @param {string|Request} url 
    * @param {object?} fetchOptions 
-   * @returns Promise.<{response: Response, clone: Response}>
+   * @returns Promise <{response: Response, clone: Response}>
    * 
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch for fetchOption
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Blob for Blob
