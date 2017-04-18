@@ -51,12 +51,5 @@ label span.help {
 }
 
 input[type=range] {
-    width: calc(100% - 35px);
-}
-
-input[type=range]:after {
-    display: block;
-    position: absolute;
-    left: calc(100% - 30px);
-    content: attr(value);
+    width: 100%;
 }

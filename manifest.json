@@ -1,4 +1,16 @@
 {
+  "manifest_version": 1,
+  "name": "FreshRSS-Notify",
+  "version": "1.0",
+
+  "options_ui": {
+    "page": "options/index.html"
+  },
+
+  "permissions": [
+    "storage"
+  ],
+
   "background": {
     "scripts": [
       "background/CONSTANT.js",
