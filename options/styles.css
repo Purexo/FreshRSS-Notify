@@ -53,3 +53,9 @@ label span.help {
 input[type=range] {
     width: 100%;
 }
+
+input[type=text] {
+    background-color: var(--text-color-second);
+    color: var(--text-color-main);
+    border: solid 1px var(--bg-color-main);
+}

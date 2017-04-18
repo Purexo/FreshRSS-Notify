@@ -19,5 +19,11 @@
       "background/lib/fetch.js",
       "background/lib/main.js"
     ]
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "freshrss@notify"
+    }
   }
 }

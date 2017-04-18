@@ -10,10 +10,14 @@
     "type": "git",
     "url": "git+https://github.com/Purexo/FreshRSS-Notify.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Purexo",
+  "license": "GNU GPL",
   "bugs": {
     "url": "https://github.com/Purexo/FreshRSS-Notify/issues"
   },
-  "homepage": "https://github.com/Purexo/FreshRSS-Notify#readme"
+  "homepage": "https://github.com/Purexo/FreshRSS-Notify#readme",
+  "devDependencies": {
+    "simple-server": "^1.0.1",
+    "web-ext": "^1.9.0"
+  }
 }
