@@ -4,20 +4,30 @@ function getAutoRefreshTime() {
 }
 
 function runAutoRefreshAlarm() {
-  adapter.alarms.clear(ALARM_AUTO_REFRESH)
+  adapter.alarms.clear(LOOP_AUTO_REFRESH)
     .then(cleared => getAutoRefreshTime())
-    .then(periodInMinutes =>
-      browser.alarms.create(ALARM_AUTO_REFRESH, {periodInMinutes})
-    )
+    .then(periodInMinutes => browser.alarms.create(LOOP_AUTO_REFRESH, {periodInMinutes}))
     .catch(err => console.error(err));
 }
 
+// simple routing alarm
 browser.alarms.onAlarm(alarm => {
-  const eventNameToFire = MAP_ALARM_TO_EVENT[alarm.name];
+  manager.fire(alarm.name, alarm);
+});
 
-  if (eventNameToFire) {
-      manager.fire(eventNameToFire, alarm);
-  } else {
-      console.log(alarm, 'is not mapped');
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.name) {
+    manager.fire(message.name, {message, sender, sendResponse});
   }
+});
+
+manager.addListener(LOOP_AUTO_REFRESH, runAutoRefreshAlarm)();
+manager.addListener(INPUT_OPTION_CHANGE, ({message, sender, sendResponse}) => {
+  const param = message.param;
+  const keys = {
+    [param.name]: param.value
+  };
+  
+  browser.storage.local.set(keys);
+  browser.storage.sync.set(keys);
 });

@@ -148,5 +148,3 @@ const manager = (function () {
 
   return new EventsManager();
 })();
-
-console.log(manager);

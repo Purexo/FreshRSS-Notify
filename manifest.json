@@ -4,7 +4,8 @@
   "version": "1.0",
 
   "options_ui": {
-    "page": "options/index.html"
+    "page": "options/index.html",
+    "open_in_tab": true
   },
 
   "permissions": [
@@ -13,7 +14,7 @@
 
   "background": {
     "scripts": [
-      "background/CONSTANTS.js",
+      "CONSTANTS/runtime.js",
       "background/lib/adapter.js",
       "background/lib/EventsManager.js",
       "background/lib/fetch.js",
