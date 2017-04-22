@@ -69,7 +69,7 @@ const manager = (function () {
      * 
      * @memberOf EventsManager
      */
-    fire(name, data) {
+    fire(name, data=null) {
       const event = new Event(name, data);
       const dispatcher = this._getNameDispatcher(name);
 

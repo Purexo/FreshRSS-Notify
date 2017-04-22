@@ -1,8 +1,12 @@
 /**
  * Created by Purexo on 21/04/2017.
  */
-const LOOP_AUTO_REFRESH = 'loop-auto-refresh';
-const INPUT_OPTION_CHANGE = 'input-option-change';
+const EVENT_LOOP_AUTO_REFRESH = 'event-loop-auto-refresh';
+const EVENT_INPUT_OPTION_CHANGE = 'event-input-option-change';
+const EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE = 'event-input-option-refresh-time-change';
+const EVENT_INPUT_OPTION_CREDENTIALS_CHANGE = 'event-input-option-credentials-change';
+const EVENT_REQUEST_PARAMS = 'event-request-params';
+const EVENT_OBTAIN_PARAMS = 'event-obtain-params';
 
 const PARAM_URL_MAIN = 'url-main';
 const PARAM_URL_API = 'url-api';

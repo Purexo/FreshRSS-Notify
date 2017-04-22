@@ -16,7 +16,7 @@
     "scripts": [
       "CONSTANTS/runtime.js",
       "background/lib/adapter.js",
-      "background/lib/EventsManager.js",
+      "globals/js/EventsManager.js",
       "background/lib/fetch.js",
       "background/main.js"
     ]
