@@ -16,6 +16,16 @@ const PARAM_REFRESH_TIME = 'refresh-time';
 const PARAM_ACTIVE_NOTIFICATIONS = 'active-notifications';
 const PARAM_NB_FETCH_ITEMS = 'nb-fetch-items';
 
+const DEFAULT_PARAMS = {
+  [PARAM_URL_MAIN]: 'https://fresh-rss-instance.tld/',
+  [PARAM_URL_API]: 'https://fresh-rss-instance.tld/api',
+  [PARAM_LOGIN]: 'Your Login',
+  [PARAM_PASSWORD_API]: 'Your Password API',
+  [PARAM_REFRESH_TIME]: 15,
+  [PARAM_ACTIVE_NOTIFICATIONS]: true,
+  [PARAM_NB_FETCH_ITEMS]: 5,
+};
+
 const STORAGE_GET_ALL_PARAMS = [
   PARAM_URL_MAIN, PARAM_URL_API, PARAM_LOGIN, PARAM_PASSWORD_API,
   PARAM_REFRESH_TIME, PARAM_ACTIVE_NOTIFICATIONS, PARAM_NB_FETCH_ITEMS

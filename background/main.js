@@ -1,7 +1,6 @@
 function getAutoRefreshTime() {
-  // TODO get from options
   return adapter.storage.local.get(PARAM_REFRESH_TIME)
-    .then(param => param[PARAM_REFRESH_TIME]);
+    .then(param => param[PARAM_REFRESH_TIME] || DEFAULT_PARAMS[PARAM_REFRESH_TIME]);
 }
 
 function runAutoRefreshAlarm() {
@@ -12,28 +11,41 @@ function runAutoRefreshAlarm() {
 }
 
 // simple routing alarm
-browser.alarms.onAlarm(alarm => {
+browser.alarms.onAlarm.addListener(alarm => {
   manager.fire(alarm.name, alarm);
 });
 
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.name) {
-    manager.fire(message.name, {message, sender, sendResponse});
-  }
-});
-
 manager.addListener(EVENT_LOOP_AUTO_REFRESH, runAutoRefreshAlarm)();
-manager.addListener(EVENT_INPUT_OPTION_CHANGE, ({message, sender, sendResponse}) => {
-  const param = message.param;
+manager.addListener(EVENT_INPUT_OPTION_CHANGE, ({data: {name, value}}) => {
   const keys = {
-    [param.name]: param.value
+    [name]: value
   };
   
   browser.storage.local.set(keys);
   browser.storage.sync.set(keys);
 });
 
+function normalyzeParams(params) {
+  const checkedParams = Object.assign({}, DEFAULT_PARAMS, params);
+  
+  let persist = false;
+  for (let name of STORAGE_GET_ALL_PARAMS) {
+    if (checkedParams[name] != params[name]) {
+      persist = true;
+      break;
+    }
+  }
+  
+  if (persist) {
+    browser.storage.local.set(checkedParams);
+    browser.storage.sync.set(checkedParams);
+  }
+  
+  return checkedParams;
+}
+
 manager.addListener(EVENT_REQUEST_PARAMS, () => {
   adapter.storage.local.get(STORAGE_GET_ALL_PARAMS)
-    .then(params => browser.runtime.sendMessage({name: EVENT_OBTAIN_PARAMS, params}));
+    .then(normalyzeParams)
+    .then(params => manager.fire(EVENT_OBTAIN_PARAMS, params));
 });

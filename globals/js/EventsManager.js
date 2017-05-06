@@ -2,15 +2,15 @@ const manager = (function () {
   /**
    * Simple Event
    * have name and data
-   * 
+   *
    * @class Event
    */
   class Event {
     /**
      * Creates an instance of Event.
-     * @param {string} name 
+     * @param {string} name
      * @param {*} data
-     * 
+     *
      * @memberOf Event
      */
     constructor (name, data) {
@@ -21,37 +21,37 @@ const manager = (function () {
 
   /**
    * Simple EventsManager
-   * 
+   *
    * you can
    * - addListener - need name and listener
    * - fire - need name and callback
    * - removeListener - need listener
-   * 
+   *
    * @class EventsManager
    */
   class EventsManager {
     /**
      * Creates an instance of EventsManager.
      * @param {boolean} debug
-     * 
+     *
      * @memberOf EventsManager
      */
-    constructor({debug=false}={}) {
+    constructor(debug = false) {
       this._debug = debug;
       this.clear();
     }
 
     /**
      * Add a listener
-     * 
-     * @param {string} name 
+     *
+     * @param {string} name
      * @param {Function} listener - take one arg of Event type (data when fired if defined is in it)
      * @returns {*} listener - usefull for removeListener
-     * 
+     *
      * @example
      * manager.addListener('is-ready', ({name, data}) => console.log(`${name} fired with data :`, data))
      * manager.addListener('is-ready', (event => console.log(event))
-     * 
+     *
      * @memberOf EventsManager
      */
     addListener(name, listener) {
@@ -63,17 +63,17 @@ const manager = (function () {
 
     /**
      * fire event, will call all listener associated with name given
-     * 
-     * @param {string} name 
+     *
+     * @param {string} name
      * @param {*} data
-     * 
+     *
      * @memberOf EventsManager
      */
     fire(name, data=null) {
       const event = new Event(name, data);
       const dispatcher = this._getNameDispatcher(name);
 
-      this._debug && console.log(`event ${name} is fired with data :`, data) || console.trace();
+      this._debug && (console.log(`event ${name} is fired with data :`, data) || console.trace());
 
       dispatcher
         .forEach(listener => typeof listener === 'function' ? listener(event) : event);
@@ -81,10 +81,10 @@ const manager = (function () {
 
     /**
      * remove listener associated with name and listener given
-     * 
+     *
      * @param {*} name
      * @param {Function} listener
-     * 
+     *
      * @memberOf EventsManager
      */
     removeListener(name, listener) {
@@ -95,9 +95,9 @@ const manager = (function () {
 
     /**
      * remove all listener associated with name given
-     * 
+     *
      * @param {*} name
-     * 
+     *
      * @memberOf EventsManager
      */
     removeAllListener(name) {
@@ -106,7 +106,7 @@ const manager = (function () {
 
     /**
      * remove all listener
-     * 
+     *
      * @memberOf EventsManager
      */
     clear() {
@@ -124,9 +124,9 @@ const manager = (function () {
     }
 
     /**
-     * @param {string} name 
-     * @returns 
-     * 
+     * @param {string} name
+     * @returns
+     *
      * @memberOf EventsManager
      * @private
      */
@@ -135,9 +135,9 @@ const manager = (function () {
     }
 
     /**
-     * @param {string} name 
+     * @param {string} name
      * @returns
-     * 
+     *
      * @memberOf EventsManager
      * @private
      */
@@ -146,5 +146,12 @@ const manager = (function () {
     }
   }
 
-  return new EventsManager();
+  return new EventsManager(true);
 })();
+
+// assign manager to window object : share with option page by browser.extension.getBackgroundPage() : return window of background page
+Object.defineProperty(window, 'manager', {
+  configurable: false,
+  writable: false,
+  value: manager
+});

@@ -1,3 +1,8 @@
+const background = browser.extension.getBackgroundPage();
+const manager = background.manager;
+
+console.log(background);
+
 $.ready(() => {
   // Tout les inputs de la page d'option
   const $input_url_main = $('#input-url-main');
@@ -22,8 +27,8 @@ $.ready(() => {
   });
   
   // demande et récupère les params
-  manager.addListener(EVENT_OBTAIN_PARAMS, ({message, sender, sendResponse}) => {
-    ALL_INPUTS.forEach(input => input.value = message.params[input.id.substring(6)]);
+  manager.addListener(EVENT_OBTAIN_PARAMS, ({data: params}) => {
+    ALL_INPUTS.forEach(input => input.value = params[input.id.substring(6)]);
   });
   manager.fire(EVENT_REQUEST_PARAMS);
   
@@ -35,12 +40,7 @@ $.ready(() => {
   }
   
   function handlerForListenerToSendRuntimeMessageFactory (messageName) {
-    return event => {
-      browser.runtime.sendMessage({
-        name: messageName,
-        param: getParamFromInput(event.target)
-      });
-    }
+    return event => manager.fire(messageName, getParamFromInput(event.target));
   }
   
   // Envoi au runtime des nouvelles valeurs d'option à chaque changement
@@ -54,10 +54,4 @@ $.ready(() => {
   // Envoi d'un message spécifique car une information de crendential vient de changer, il faut ce reconnecter
   const INPUT_OPTION_CREDENTIAL_CHANGE_HANDLER = handlerForListenerToSendRuntimeMessageFactory(EVENT_INPUT_OPTION_CREDENTIALS_CHANGE);
   CREDENTIALS_INPUTS.forEach(input => $.addEventsListener(INPUT_CHANGE_EVENTS, input, INPUT_OPTION_CREDENTIAL_CHANGE_HANDLER))
-});
-
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.name) {
-    manager.fire(message.name, {message, sender, sendResponse});
-  }
 });
