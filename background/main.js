@@ -1,5 +1,5 @@
 function getAutoRefreshTime() {
-  return adapter.storage.local.get(PARAM_REFRESH_TIME)
+  return adapter.storage.auto.get(PARAM_REFRESH_TIME)
     .then(param => param[PARAM_REFRESH_TIME] || DEFAULT_PARAMS[PARAM_REFRESH_TIME]);
 }
 
@@ -21,8 +21,7 @@ manager.addListener(EVENT_INPUT_OPTION_CHANGE, ({data: {name, value}}) => {
     [name]: value
   };
   
-  browser.storage.local.set(keys);
-  browser.storage.sync.set(keys);
+  adapter.storage.auto.set(keys);
 });
 
 function normalyzeParams(params) {
@@ -37,8 +36,7 @@ function normalyzeParams(params) {
   }
   
   if (persist) {
-    browser.storage.local.set(checkedParams);
-    browser.storage.sync.set(checkedParams);
+    adapter.storage.auto.set(checkedParams);
   }
   
   return checkedParams;

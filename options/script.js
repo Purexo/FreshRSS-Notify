@@ -39,19 +39,19 @@ $.ready(() => {
     };
   }
   
-  function handlerForListenerToSendRuntimeMessageFactory (messageName) {
-    return event => manager.fire(messageName, getParamFromInput(event.target));
+  function handlerForListenerToFireEventFactory (eventName) {
+    return event => manager.fire(eventName, getParamFromInput(event.target));
   }
   
   // Envoi au runtime des nouvelles valeurs d'option à chaque changement
-  const INPUT_OPTION_CHANGE_HANDLER = handlerForListenerToSendRuntimeMessageFactory(EVENT_INPUT_OPTION_CHANGE);
+  const INPUT_OPTION_CHANGE_HANDLER = handlerForListenerToFireEventFactory(EVENT_INPUT_OPTION_CHANGE);
   ALL_INPUTS.forEach(input => $.addEventsListener(INPUT_CHANGE_EVENTS, input, INPUT_OPTION_CHANGE_HANDLER));
   
   // Envoi d'un message spécifique parce-que le refresh time vient de changer, il va faloir réinitialiser la boucle
-  const INPUT_OPTION_REFRESH_TIME_CHANGE_HANDLER = handlerForListenerToSendRuntimeMessageFactory(EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE);
+  const INPUT_OPTION_REFRESH_TIME_CHANGE_HANDLER = handlerForListenerToFireEventFactory(EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE);
   $.addEventsListener(INPUT_CHANGE_EVENTS, $input_refresh_time, INPUT_OPTION_REFRESH_TIME_CHANGE_HANDLER);
   
   // Envoi d'un message spécifique car une information de crendential vient de changer, il faut ce reconnecter
-  const INPUT_OPTION_CREDENTIAL_CHANGE_HANDLER = handlerForListenerToSendRuntimeMessageFactory(EVENT_INPUT_OPTION_CREDENTIALS_CHANGE);
+  const INPUT_OPTION_CREDENTIAL_CHANGE_HANDLER = handlerForListenerToFireEventFactory(EVENT_INPUT_OPTION_CREDENTIALS_CHANGE);
   CREDENTIALS_INPUTS.forEach(input => $.addEventsListener(INPUT_CHANGE_EVENTS, input, INPUT_OPTION_CREDENTIAL_CHANGE_HANDLER))
 });

@@ -24,7 +24,8 @@ const adapter = {
         return chrome
           ? new Promise(resolve => browser.storage.sync.get(keys, values => resolve(values)))
           : browser.storage.sync.get(keys);
-      }
+      },
+      set: browser.storage.sync && browser.storage.sync.set
     },
     local: {
       get(keys) {
@@ -32,6 +33,10 @@ const adapter = {
           ? new Promise(resolve => browser.storage.local.get(keys, values => resolve(values)))
           : browser.storage.local.get(keys);
       }
-    }
+    },
+    set: browser.storage.local && browser.storage.local.set
   }
 };
+
+// privilege sync over local, but local for brower not compatible with sync
+adapter.storage.auto = browser.storage.sync ? adapter.storage.sync : adapter.storage.local;
