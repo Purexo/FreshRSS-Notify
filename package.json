@@ -4,7 +4,7 @@
   "description": "// TODO ALL",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node_module/.bin/web-ext run"
   },
   "repository": {
     "type": "git",

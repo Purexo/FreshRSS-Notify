@@ -3,11 +3,6 @@
   "name": "FreshRSS-Notify",
   "version": "1.0",
 
-  "options_ui": {
-    "page": "options/index.html",
-    "open_in_tab": true
-  },
-
   "permissions": [
     "storage",
     "alarms"
@@ -19,8 +14,23 @@
       "background/lib/adapter.js",
       "globals/js/EventsManager.js",
       "background/lib/fetch.js",
+      "background/lib/functions.js",
       "background/main.js"
     ]
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "16": "browser_action/icon.png",
+      "32": "browser_action/icon.png"
+    },
+    "default_title": "FreshRSS Notify",
+    "default_popup": "panel/index.html"
+  },
+
+  "options_ui": {
+    "page": "options/index.html",
+    "open_in_tab": true
   },
 
   "applications": {
