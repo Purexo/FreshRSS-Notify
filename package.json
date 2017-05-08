@@ -4,7 +4,7 @@
   "description": "// TODO ALL",
   "main": "index.js",
   "scripts": {
-    "start": "node_module/.bin/web-ext run"
+    "start": "web-ext run"
   },
   "repository": {
     "type": "git",
