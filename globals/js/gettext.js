@@ -160,4 +160,4 @@ const gettext = (function (background) {
   gettext.RANGE_TEXT_SEPARATOR = RANGE_TEXT_SEPARATOR;
   
   return gettext;
-})();
+})(background);
