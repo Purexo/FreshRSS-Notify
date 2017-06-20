@@ -1,8 +1,3 @@
-const background = browser.extension.getBackgroundPage();
-const manager = background.manager;
-
-console.log(background);
-
 $.ready(() => {
   // Tout les inputs de la page d'option
   const $input_url_main = $('#input-url-main');
