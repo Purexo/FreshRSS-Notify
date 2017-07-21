@@ -18,10 +18,10 @@
   "homepage": "https://github.com/Purexo/FreshRSS-Notify#readme",
   "devDependencies": {
     "simple-server": "^1.0.1",
-    "web-ext": "^1.9.0"
+    "web-ext": "^1.10.1"
   },
   "dependencies": {
     "i18next": "^8.4.3",
-    "webextension-polyfill": "file:webextension-polyfill"
+    "webextension-polyfill": "^0.1.1"
   }
 }
