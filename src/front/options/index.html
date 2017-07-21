@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../libs/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../libs/bootstrap/css/bootstrap-slate.css">
+</head>
+<body>
+<div class="container">
+    <h1>Options</h1>
+
+    <form>
+        <fieldset>
+            <legend>Server Settings</legend>
+
+            <!-- URL FreshRSS -->
+            <div class="form-group">
+                <label for="input-url-main">URL :</label>
+                <input id="input-url-main" aria-describedby="input-url-main-help" class="form-control"
+                       type="text" placeholder="Enter URL" name="url-main">
+                <small id="input-url-main-help" class="form-text text-muted">Adresse de votre instance FreshRSS.</small>
+            </div>
+
+            <!-- URL API FreshRSS -->
+            <div class="form-group">
+                <label for="input-url-api">URL de l'API :</label>
+                <input id="input-url-api" aria-describedby="input-url-api-help" class="form-control"
+                       type="text" placeholder="Enter URL" name="url-api">
+                <small id="input-url-api-help" class="form-text text-muted">Chemin absolu du dossier API</small>
+            </div>
+
+            <button id="btn-check-server" class="btn btn-primary"
+                    type="button"
+            >Check server</button>
+        </fieldset>
+
+
+        <fieldset>
+            <legend>Authentification Settings</legend>
+
+            <!-- Login -->
+            <div class="form-group">
+                <label for="input-login">Identifiant :</label>
+                <input id="input-login" aria-describedby="input-login-help" class="form-control"
+                       type="text" placeholder="Enter Login" name="login">
+                <small id="input-login-help" class="form-text text-muted">Votre identifiant, ID de connexion, couriel...</small>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="input-password-api">Mot de passe API :</label>
+                <input id="input-password-api" aria-describedby="input-password-api-help" class="form-control"
+                       type="password" placeholder="Enter Password" name="password-api">
+                <small id="input-password-api-help" class="form-text text-muted">
+                    Vous devez le définir, ce n'est pas le même mot de passe que vous utilisez pour vous connecter
+                </small>
+            </div>
+
+            <button id="btn-check-credentials" class="btn btn-primary"
+                    type="button"
+            >Check credentials</button>
+        </fieldset>
+
+        <fieldset>
+            <legend>Notification Settings</legend>
+
+            <!-- Délai d'actualisation -->
+            <div class="form-group">
+                <label for="input-refresh-time">Délai d'actualisation :</label>
+                <div class="input-group" style="align-items: center">
+                    <input id="input-refresh-time" class="form-control" style="height: 100%"
+                           aria-describedby="input-refresh-time-help" aria-details="input-refresh-time-detail"
+                           type="range" min="1" max="30" value="15" name="refresh-time">
+                    <div id="input-refresh-time-detail" class="input-group-addon">15 min</div>
+                </div>
+                <small id="input-refresh-time-help" class="form-text text-muted">En minutes</small>
+            </div>
+
+            <!-- Notifications -->
+            <div class="form-check">
+                <label class="form-check-label">
+                    Afficher les notifications :
+                    <input id="input-active-notifications" class="form-check-input"
+                           aria-describedby="input-active-notifications-help"
+                           type="checkbox" checked value="1" name="active-notifications">
+                </label>
+                <small id="input-active-notifications-help" class="form-text text-muted">
+                    Décocher pour désactiver les notifications
+                </small>
+            </div>
+
+            <!-- Nomber de flux -->
+            <div class="form-group">
+                <label for="input-nb-fetch-items">Nombre de flux à afficher :</label>
+                <input id="input-nb-fetch-items" class="form-control"
+                       type="number" step="1" value="5" min="1" max="10" name="nb-fetch-items">
+                <small id="input-nb-fetch-items-help" class="form-text text-muted">
+                    Nombre de flux à afficher dans le pannel (1 à 10, 5 par défaut)
+                </small>
+            </div>
+        </fieldset>
+    </form>
+
+</div>
+
+<!-- jQuery first, then Tether, then Bootstrap JS. -->
+<script src="../libs/jquery/jquery-3.2.1.min.js"></script>
+<script src="../libs/tether/js/tether.min.js"></script>
+<script src="../libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../constants.js"></script>
+<script src="../libs/expose-background.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

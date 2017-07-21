@@ -3,8 +3,13 @@
  */
 
 function getAutoRefreshTime () {
-  return adapter.storage.auto.get(PARAM_REFRESH_TIME)
+  return browser.storage.local.get(PARAM_REFRESH_TIME)
     .then(param => param[PARAM_REFRESH_TIME] || DEFAULT_PARAMS[PARAM_REFRESH_TIME]);
+}
+
+function saveInStorage (params) {
+  browser.storage.local.set(params);
+  browser.storage.sync.set(params);
 }
 
 function shouldSavaParams (checkedParams, oldParams) {
@@ -24,7 +29,7 @@ function normalyzeParams (params) {
   const checkedParams = Object.assign({}, DEFAULT_PARAMS, params);
   
   if (shouldSavaParams(checkedParams, params)) {
-    adapter.storage.auto.set(checkedParams);
+    saveInStorage(checkedParams);
   }
   
   return checkedParams;

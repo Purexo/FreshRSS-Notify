@@ -4,7 +4,8 @@
 const EVENT_LOOP_AUTO_REFRESH = 'event-loop-auto-refresh';
 const EVENT_INPUT_OPTION_CHANGE = 'event-input-option-change';
 const EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE = 'event-input-option-refresh-time-change';
-const EVENT_INPUT_OPTION_CREDENTIALS_CHANGE = 'event-input-option-credentials-change';
+const EVENT_INPUT_OPTION_SERVER_CHECK = 'event-input-option-server-check';
+const EVENT_INPUT_OPTION_CREDENTIALS_CHECK = 'event-input-option-credentials-check';
 const EVENT_REQUEST_PARAMS = 'event-request-params';
 const EVENT_OBTAIN_PARAMS = 'event-obtain-params';
 

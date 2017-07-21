@@ -11,26 +11,27 @@
 
   "background": {
     "scripts": [
-      "CONSTANTS/runtime.js",
-      "background/lib/adapter.js",
-      "globals/js/EventsManager.js",
-      "background/lib/fetch.js",
-      "background/lib/functions.js",
-      "background/main.js"
+      "node_modules/i18next/dist/umd/i18next.js",
+      "webextension-polyfill/dist/browser-polyfill.js",
+      "src/constants.js",
+      "src/back/lib/EventsManager.js",
+      "src/back/lib/fetch.js",
+      "src/back/lib/functions.js",
+      "src/back/main.js"
     ]
   },
 
   "browser_action": {
     "default_icon": {
-      "16": "browser_action/icon.png",
-      "32": "browser_action/icon.png"
+      "16": "Assets/icon.png",
+      "32": "Assets/icon.png"
     },
     "default_title": "FreshRSS Notify",
-    "default_popup": "panel/index.html"
+    "default_popup": "src/front/panel/index.html"
   },
 
   "options_ui": {
-    "page": "options/index.html",
+    "page": "src/front/options/index.html",
     "open_in_tab": true
   },
 

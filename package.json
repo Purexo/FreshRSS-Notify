@@ -4,7 +4,7 @@
   "description": "// TODO ALL",
   "main": "index.js",
   "scripts": {
-    "start": "web-ext run"
+    "start": "web-ext run --verbose"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,8 @@
   "devDependencies": {
     "simple-server": "^1.0.1",
     "web-ext": "^1.9.0"
+  },
+  "dependencies": {
+    "i18next": "^8.4.3"
   }
 }
