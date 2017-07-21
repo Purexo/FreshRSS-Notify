@@ -21,6 +21,7 @@
     "web-ext": "^1.9.0"
   },
   "dependencies": {
-    "i18next": "^8.4.3"
+    "i18next": "^8.4.3",
+    "webextension-polyfill": "file:webextension-polyfill"
   }
 }
