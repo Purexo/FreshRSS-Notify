@@ -4,7 +4,9 @@
   "description": "// TODO ALL",
   "main": "index.js",
   "scripts": {
-    "start": "web-ext run --verbose"
+    "start": "web-ext run",
+    "postinstall": "node npm_scripts/fetch_dependencies.js",
+    "postupdate": "node npm_scripts/fetch_dependencies.js"
   },
   "repository": {
     "type": "git",

@@ -1,2 +1,4 @@
 .idea
 node_modules
+src/back/lib/from_npm/
+!src/back/lib/from_npm/.gitkeep

@@ -14,12 +14,15 @@
 
   "background": {
     "scripts": [
-      "node_modules/i18next/dist/umd/i18next.js",
-      "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+      "src/back/lib/from_npm/i18next.js",
+      "src/back/lib/from_npm/browser-polyfill.js",
+
       "src/constants.js",
+
       "src/back/lib/EventsManager.js",
       "src/back/lib/fetch.js",
       "src/back/lib/functions.js",
+
       "src/back/main.js"
     ]
   },
