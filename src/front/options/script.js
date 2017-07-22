@@ -16,6 +16,13 @@ $(function $_on_ready_handler() {
   /* --- Gestion generic des inputs du form --- */
   const $form = $('form');
   
+  $form.on('change', '.js-should-end-by-slash', /** @this {HTMLInputElement}*/ function $form_js_should_end_by_slash_on_change(event) {
+    if (!this.value.endsWith('/')) {
+      event.preventDefault();
+      this.value = `${this.value}/`
+    }
+  });
+  
   // Au change input, fire EVENT_INPUT_OPTION_CHANGE avec en données le nom du param et sa nouvelle valeur
   $form.on('change', 'input', /** @this {HTMLInputElement}*/ function $form_input_on_change () {
     manager.fire(EVENT_INPUT_OPTION_CHANGE, getParamFromInput(this));
@@ -55,10 +62,7 @@ $(function $_on_ready_handler() {
   
   // check if api respond
   $btn_check_credentials.on('click', function $btn_check_credentials_on_click() {
-    manager.fire(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, {
-      [PARAM_LOGIN]: $input_input_login.val(),
-      [PARAM_PASSWORD_API]: $input_input_password_api.val(),
-    });
+    manager.fire(EVENT_INPUT_OPTION_CREDENTIALS_CHECK);
   });
   
   /* --- Récupèration des params --- */

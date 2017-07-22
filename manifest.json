@@ -22,6 +22,7 @@
       "src/back/lib/EventsManager.js",
       "src/back/lib/fetch.js",
       "src/back/lib/functions.js",
+      "src/back/lib/RssApi.class.js",
 
       "src/back/main.js"
     ]

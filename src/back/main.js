@@ -42,7 +42,8 @@ manager.addListener(
 manager.addListener(EVENT_REQUEST_PARAMS, () => {
   browser.storage.local.get(STORAGE_GET_ALL_PARAMS)
     .then(normalyzeParams)
-    .then(params => manager.fire(EVENT_OBTAIN_PARAMS, params));
+    .then(params => manager.fire(EVENT_OBTAIN_PARAMS, params))
+    .catch(err => console.error(err));
 });
 
 manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({data: {[PARAM_URL_MAIN]: url_main, [PARAM_URL_API]: url_api}}) => {
@@ -71,6 +72,13 @@ manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({data: {[PARAM_URL_MAIN]: 
   get.text(url_api)
     .then(result => console.log(result))
     .catch(error => console.error(error));
+});
+
+const API = new RssApi();
+manager.addListener(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, () => {
+  API.connect()
+    .then(token => console.log(`TOKEN: ${token}`))
+    .catch(err => console.error(err))
 });
 
 resetAutoRefreshAlarm();
