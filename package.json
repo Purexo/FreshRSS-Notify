@@ -5,8 +5,22 @@
   "main": "index.js",
   "scripts": {
     "start": "web-ext run",
-    "postinstall": "node npm_scripts/fetch_dependencies.js",
-    "postupdate": "node npm_scripts/fetch_dependencies.js"
+
+    "fetch-deps": "node npm_scripts/fetch_dependencies.js",
+    "postinstall": "npm run fetch-deps",
+    "postupdate": "npm run fetch-deps"
+  },
+  "config": {
+    "files": [
+      [
+        "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+        "src/back/lib/from_npm/browser-polyfill.js"
+      ],
+      [
+        "node_modules/i18next/dist/umd/i18next.js",
+        "src/back/lib/from_npm/i18next.js"
+      ]
+    ]
   },
   "repository": {
     "type": "git",
