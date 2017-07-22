@@ -6,7 +6,10 @@
 
   "permissions": [
     "storage",
-    "alarms"
+    "alarms",
+    "notifications",
+    "http://*/*",
+    "https://*/*"
   ],
 
   "background": {

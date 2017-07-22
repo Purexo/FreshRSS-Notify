@@ -45,4 +45,32 @@ manager.addListener(EVENT_REQUEST_PARAMS, () => {
     .then(params => manager.fire(EVENT_OBTAIN_PARAMS, params));
 });
 
+manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({data: {[PARAM_URL_MAIN]: url_main, [PARAM_URL_API]: url_api}}) => {
+  get.text(url_main)
+    .then(result => {
+      console.log(result);
+      
+      browser.notifications.create('Success', {
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("Assets/icon.png"),
+        "title": "Success!",
+        "message": "Yeah"
+      });
+    })
+    .catch(error => {
+      console.error(error);
+  
+      browser.notifications.create('Fail', {
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("Assets/icon.png"),
+        "title": "Fail!",
+        "message": "Oooh"
+      });
+    });
+  
+  get.text(url_api)
+    .then(result => console.log(result))
+    .catch(error => console.error(error));
+});
+
 resetAutoRefreshAlarm();
