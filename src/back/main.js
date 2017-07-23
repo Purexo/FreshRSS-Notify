@@ -51,22 +51,12 @@ manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({data: {[PARAM_URL_MAIN]: 
     .then(result => {
       console.log(result);
       
-      browser.notifications.create('Success', {
-        "type": "basic",
-        "iconUrl": browser.extension.getURL("Assets/icon.png"),
-        "title": "Success!",
-        "message": "Yeah"
-      });
+      NOTIFICATIONS[NOTIFICATION_SERVER_CHECK_SUCCESS].create();
     })
     .catch(error => {
       console.error(error);
   
-      browser.notifications.create('Fail', {
-        "type": "basic",
-        "iconUrl": browser.extension.getURL("Assets/icon.png"),
-        "title": "Fail!",
-        "message": "Oooh"
-      });
+      NOTIFICATIONS[NOTIFICATION_SERVER_CHECK_FAIL].create();
     });
   
   get.text(url_api)
@@ -77,8 +67,8 @@ manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({data: {[PARAM_URL_MAIN]: 
 const API = new RssApi();
 manager.addListener(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, () => {
   API.connect()
-    .then(token => console.log(`TOKEN: ${token}`))
-    .catch(err => console.error(err))
+    .then(token => console.log(`TOKEN: ${token}`) || NOTIFICATIONS[NOTIFICATION_CREDENTIALS_CHECK_SUCCESS].create())
+    .catch(err => console.error(err) || NOTIFICATIONS[NOTIFICATION_CREDENTIALS_CHECK_FAIL].create())
 });
 
 resetAutoRefreshAlarm();

@@ -23,6 +23,7 @@
       "src/back/lib/fetch.js",
       "src/back/lib/functions.js",
       "src/back/lib/RssApi.class.js",
+      "src/back/lib/Notification.class.js",
 
       "src/back/main.js"
     ]
@@ -30,8 +31,8 @@
 
   "browser_action": {
     "default_icon": {
-      "16": "Assets/icon.png",
-      "32": "Assets/icon.png"
+      "16": "Assets/img/icon.png",
+      "32": "Assets/img/icon.png"
     },
     "default_title": "FreshRSS Notify",
     "default_popup": "src/front/panel/index.html"

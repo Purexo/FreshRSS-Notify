@@ -31,3 +31,8 @@ const STORAGE_GET_ALL_PARAMS = [
   PARAM_URL_MAIN, PARAM_URL_API, PARAM_LOGIN, PARAM_PASSWORD_API,
   PARAM_REFRESH_TIME, PARAM_ACTIVE_NOTIFICATIONS, PARAM_NB_FETCH_ITEMS
 ];
+
+const NOTIFICATION_SERVER_CHECK_SUCCESS = 'notification-server-check-success';
+const NOTIFICATION_SERVER_CHECK_FAIL = 'notification-server-check-fail';
+const NOTIFICATION_CREDENTIALS_CHECK_SUCCESS = 'notification-credential-check-success';
+const NOTIFICATION_CREDENTIALS_CHECK_FAIL = 'notification-credential-check-success';
