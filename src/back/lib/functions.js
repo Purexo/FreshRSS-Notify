@@ -34,3 +34,36 @@ function normalyzeParams (params) {
   
   return checkedParams;
 }
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function PromiseWaitAll(promises) {
+  return new Promise(function (resolve, reject) {
+    if (typeof promises[Symbol.iterator] !== 'function') {
+      reject('promises should be an Iterable of Promise');
+    }
+    let count = promises.length || typeof promises.size;
+    const results = new Map();
+    
+    // iterate over iterable
+    // array not work with [index, value] array.entries() did
+    const iterator = typeof promises.entries == 'function' ? promises.entries() : promises;
+    for (let [index, promise] of iterator) {
+      let handler = data => {
+        results.set(index, data);
+        if (--count == 0) {
+          resolve(results);
+        }
+      };
+      
+      if (promise instanceof Promise) {
+        promise.then(handler);
+        promise.catch(handler);
+      } else {
+        handler(promise);
+      }
+    }
+  });
+}

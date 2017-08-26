@@ -4,4 +4,4 @@
 const background = browser.extension.getBackgroundPage();
 const manager = background.manager;
 
-console.debug(background);
+console.debug(background, window);

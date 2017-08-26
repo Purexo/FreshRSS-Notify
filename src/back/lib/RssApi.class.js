@@ -91,6 +91,7 @@ class URLParams extends Map {
   }
   
   /**
+   * Implicit transformation
    *
    * @return {string}
    */
@@ -265,6 +266,7 @@ class RssApi {
             content: item.summary.content,
             itemid: item.id,
             isRead,
+            item, // debug TODO remove
           })));
       })
   }

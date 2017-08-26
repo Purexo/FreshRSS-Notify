@@ -1,0 +1,8 @@
+.navbar .fa {
+    font-size: 2em;
+}
+
+.navbar .nav-link {
+    min-width: 5em;
+    text-align: center;
+}

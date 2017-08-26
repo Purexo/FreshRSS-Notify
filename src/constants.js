@@ -8,6 +8,8 @@ const EVENT_INPUT_OPTION_SERVER_CHECK = 'event-input-option-server-check';
 const EVENT_INPUT_OPTION_CREDENTIALS_CHECK = 'event-input-option-credentials-check';
 const EVENT_REQUEST_PARAMS = 'event-request-params';
 const EVENT_OBTAIN_PARAMS = 'event-obtain-params';
+const EVENT_OBTAIN_NBUNREADS = 'event-obtain-nbunreads';
+const EVENT_OBTAIN_RSS = 'event-obtain-rss';
 
 const PARAM_URL_MAIN = 'url-main';
 const PARAM_URL_API = 'url-api';
@@ -36,3 +38,4 @@ const NOTIFICATION_SERVER_CHECK_SUCCESS = 'notification-server-check-success';
 const NOTIFICATION_SERVER_CHECK_FAIL = 'notification-server-check-fail';
 const NOTIFICATION_CREDENTIALS_CHECK_SUCCESS = 'notification-credential-check-success';
 const NOTIFICATION_CREDENTIALS_CHECK_FAIL = 'notification-credential-check-success';
+const NOTIFICATION_REFRESH_SUCCESS = 'notification-refresh-success';

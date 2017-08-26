@@ -34,9 +34,10 @@ class Notification {
    */
   create(title, message, iconUrl) {
     iconUrl = Notification.getURL(iconUrl);
-    const options = Object.assign({}, this.default, {
-      title, message, iconUrl
-    });
+    const options = {};
+    options.title = title || this.default.title;
+    options.message = message || this.default.message;
+    options.iconUrl = iconUrl || this.default.iconUrl;
   
     if (!options.title) {
       requiredParam('Notification.prototype.create', 'title', 'no default value are setted');
@@ -58,16 +59,19 @@ class Notification {
 const NOTIFICATIONS = {
   [NOTIFICATION_SERVER_CHECK_SUCCESS]: new Notification(NOTIFICATION_SERVER_CHECK_SUCCESS, 'Success', 'Server responded correctly'),
   [NOTIFICATION_SERVER_CHECK_FAIL]: new Notification(
-    NOTIFICATION_SERVER_CHECK_FAIL, 'Fail',
+    NOTIFICATION_SERVER_CHECK_FAIL,
+    'Fail',
     'Server responded badly, check urls and yout connection',
     'Assets/img/error.png'
   ),
   [NOTIFICATION_CREDENTIALS_CHECK_SUCCESS]: new Notification(NOTIFICATION_CREDENTIALS_CHECK_SUCCESS, 'Success', 'Your are correctly connected'),
   [NOTIFICATION_CREDENTIALS_CHECK_FAIL]: new Notification(
-    NOTIFICATION_CREDENTIALS_CHECK_FAIL, 'Fail',
+    NOTIFICATION_CREDENTIALS_CHECK_FAIL,
+    'Fail',
     'Check your password api and login',
     'Assets/img/error.png'
-  )
+  ),
+  [NOTIFICATION_REFRESH_SUCCESS]: new Notification(NOTIFICATION_REFRESH_SUCCESS, 'Success', 'You have x unreads articles')
 };
 
 browser.notifications.onClicked.addListener(notification_id => {
