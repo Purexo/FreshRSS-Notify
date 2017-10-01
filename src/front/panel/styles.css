@@ -1,8 +1,33 @@
-.navbar .fa {
-    font-size: 2em;
+.fa {
+    font-size: 1.5em;
 }
 
-.navbar .nav-link {
-    min-width: 5em;
+.nav-item {
     text-align: center;
+    margin-left: 0.25em;
+    flex: 1;
+}
+
+.bg-secondary {
+    background-color: #2e3133 !important;
+}
+
+.mCustomScrollbar {
+    height: 440px;
+}
+
+.mCSB_inside > .mCSB_container {
+    margin-right: 15px;
+}
+
+.mCS-dark.mCSB_scrollTools.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dragger_bar {
+    background-color: rgba(0,0,0,.60);
+}
+
+.mCS-dark.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar {
+    background-color: rgba(0,0,0,.50);
+}
+
+.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+    background-color: rgba(0,0,0,.40);
 }
