@@ -7,9 +7,8 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../libs/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../libs/bootstrap/css/bootstrap-slate.css">
 </head>
-<body>
+<body class="bg-dark text-light">
 <div class="container">
     <h1>Options</h1>
 
@@ -35,9 +34,7 @@
                 <small id="input-url-api-help" class="form-text text-muted">Chemin absolu du dossier API</small>
             </div>
 
-            <button id="btn-check-server" class="btn btn-primary"
-                    type="button"
-            >Check server</button>
+            <button id="btn-check-server" class="btn btn-secondary" type="button">Check server</button>
         </fieldset>
 
 
@@ -62,7 +59,7 @@
                 </small>
             </div>
 
-            <button id="btn-check-credentials" class="btn btn-primary"
+            <button id="btn-check-credentials" class="btn btn-secondary"
                     type="button"
             >Check credentials</button>
         </fieldset>
@@ -85,10 +82,10 @@
             <!-- Notifications -->
             <div class="form-check">
                 <label class="form-check-label">
-                    Afficher les notifications :
                     <input id="input-active-notifications" class="form-check-input"
                            aria-describedby="input-active-notifications-help"
                            type="checkbox" checked value="1" name="active-notifications">
+                    Afficher les notifications
                 </label>
                 <small id="input-active-notifications-help" class="form-text text-muted">
                     Décocher pour désactiver les notifications
@@ -111,7 +108,7 @@
 
 <!-- jQuery first, then Tether, then Bootstrap JS. -->
 <script src="../libs/jquery/jquery-3.2.1.min.js"></script>
-<script src="../libs/tether/js/tether.min.js"></script>
+<script src="../libs/popper.js"></script>
 <script src="../libs/bootstrap/js/bootstrap.min.js"></script>
 <script src="../../constants.js"></script>
 <script src="../libs/expose-background.js"></script>
