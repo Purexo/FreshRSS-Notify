@@ -56,8 +56,6 @@ $(function $_on_ready_handler() {
   });
   
   /* --- Gestion du fieldset authentification settings --- */
-  const $input_input_login = $form.find('#input-login');
-  const $input_input_password_api = $form.find('#input-password-api');
   const $btn_check_credentials = $form.find('#btn-check-credentials');
   
   // check if api respond
