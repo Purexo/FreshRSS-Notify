@@ -10,6 +10,7 @@ const EVENT_REQUEST_PARAMS = 'event-request-params';
 const EVENT_OBTAIN_PARAMS = 'event-obtain-params';
 const EVENT_OBTAIN_NBUNREADS = 'event-obtain-nbunreads';
 const EVENT_OBTAIN_RSS = 'event-obtain-rss';
+const EVENT_ASK_REFRESH_RSS = 'event-ask-refresh-rss';
 
 const PARAM_URL_MAIN = 'url-main';
 const PARAM_URL_API = 'url-api';
@@ -37,5 +38,5 @@ const STORAGE_GET_ALL_PARAMS = [
 const NOTIFICATION_SERVER_CHECK_SUCCESS = 'notification-server-check-success';
 const NOTIFICATION_SERVER_CHECK_FAIL = 'notification-server-check-fail';
 const NOTIFICATION_CREDENTIALS_CHECK_SUCCESS = 'notification-credential-check-success';
-const NOTIFICATION_CREDENTIALS_CHECK_FAIL = 'notification-credential-check-success';
+const NOTIFICATION_CREDENTIALS_CHECK_FAIL = 'notification-credential-check-fail';
 const NOTIFICATION_REFRESH_SUCCESS = 'notification-refresh-success';

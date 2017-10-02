@@ -5,11 +5,10 @@
   "default_locale": "en",
 
   "permissions": [
+    "<all_urls>",
     "storage",
     "alarms",
-    "notifications",
-    "http://*/*",
-    "https://*/*"
+    "notifications"
   ],
 
   "background": {

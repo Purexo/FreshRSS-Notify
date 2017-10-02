@@ -2,10 +2,11 @@ function resetAutoRefreshAlarm(runNow = true) {
   browser.alarms.clear(EVENT_LOOP_AUTO_REFRESH)
     .then(cleared => getAutoRefreshTime())
     .then(periodInMinutes => browser.alarms.create(EVENT_LOOP_AUTO_REFRESH, {
-      periodInMinutes,
-      when: runNow ? Date.now() : periodInMinutes
+      periodInMinutes
     }))
     .catch(err => console.error(err));
+  
+  manager.fire(EVENT_LOOP_AUTO_REFRESH);
 }
 const API = new RssApi();
 
@@ -26,8 +27,8 @@ browser.alarms.onAlarm.addListener(alarm => {
  */
 manager.addListener(EVENT_LOOP_AUTO_REFRESH, () => {
   Promise.all([
-    browser.storage.get(),
-    this.auth ? API.getNbUnreads() : API.connect().then(_ => API.getNbUnreads())
+    getParameters(),
+    API.auth ? API.getNbUnreads() : API.connect().then(_ => API.getNbUnreads())
   ]).then(([prefs, nbunreads]) => {
     manager.fire(EVENT_OBTAIN_NBUNREADS, nbunreads);
     const totalFxToFetch = prefs[PARAM_NB_FETCH_ITEMS];
@@ -42,21 +43,21 @@ manager.addListener(EVENT_LOOP_AUTO_REFRESH, () => {
       isRead: true
     });
     
-    PromiseWaitAll([fetchUnread, fetchRead])
+    Promise.all([fetchUnread, fetchRead])
       .then(results => results.forEach(data => {
-        if (Array.isArray(data)) {
-          data.forEach(rss => manager.fire(EVENT_OBTAIN_RSS, rss))
-        } else {
-          console.error(data); // error throw by reject Promise
-        }
+        data.forEach(rss => manager.fire(EVENT_OBTAIN_RSS, rss));
       }));
   
-    browser.browserAction.setBadgeText({text: nbunreads});
+    browser.browserAction.setBadgeText({text: `${nbunreads}`});
     browser.browserAction.setIcon({path: 'Assets/img/icon.png'});
     browser.browserAction.setBadgeBackgroundColor({
       color: nbunreads > 0 ? (NOTIFICATIONS[NOTIFICATION_REFRESH_SUCCESS].create(), 'red') : 'green'
     });
   });
+});
+
+manager.addListener(EVENT_ASK_REFRESH_RSS, ({data: runNow}) => {
+  resetAutoRefreshAlarm(runNow);
 });
 
 /**
@@ -69,22 +70,24 @@ manager.addListener(
 );
 
 /**
- * Option page request params option
+ * Request params option from client page
  * get them from auto storage
  * normalyze them
  * and fire them with EVENT_OBTAIN_PARAMS event
  */
 manager.addListener(EVENT_REQUEST_PARAMS, () => {
-  browser.storage.local.get(STORAGE_GET_ALL_PARAMS)
-    .then(normalyzeParams)
+  getParameters()
     .then(params => manager.fire(EVENT_OBTAIN_PARAMS, params))
     .catch(err => console.error(err));
 });
 
+/**
+ * Check server url
+ */
 manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({data: {[PARAM_URL_MAIN]: url_main, [PARAM_URL_API]: url_api}}) => {
   get.text(url_main)
-    .then(result => {
-      console.log(result);
+    .then(response => {
+      console.log(response.text);
       
       NOTIFICATIONS[NOTIFICATION_SERVER_CHECK_SUCCESS].create();
     })
@@ -95,10 +98,13 @@ manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({data: {[PARAM_URL_MAIN]: 
     });
   
   get.text(url_api)
-    .then(result => console.log(result))
+    .then(result => console.log(result.text))
     .catch(error => console.error(error));
 });
 
+/**
+ * Check credentials
+ */
 manager.addListener(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, () => {
   API.connect()
     .then(token => {
@@ -109,7 +115,11 @@ manager.addListener(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, () => {
       // we get a tokem, so reset the autorefresh loop
       resetAutoRefreshAlarm(false);
     })
-    .catch(err => console.error(err) || NOTIFICATIONS[NOTIFICATION_CREDENTIALS_CHECK_FAIL].create())
+    .catch(err => {
+      console.log(err);
+      NOTIFICATIONS[NOTIFICATION_CREDENTIALS_CHECK_FAIL].create();
+    })
 });
 
-resetAutoRefreshAlarm();
+syncParameters()
+  .then(resetAutoRefreshAlarm);

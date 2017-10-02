@@ -76,7 +76,15 @@ const manager = (function () {
       this._debug && (console.log(`event ${name} is fired with data :`, data) || console.trace());
 
       dispatcher
-        .forEach(listener => typeof listener === 'function' ? listener(event) : event);
+        .forEach(listener => {
+          if (typeof listener === 'function') {
+            try {
+              listener(event);
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        });
     }
 
     /**

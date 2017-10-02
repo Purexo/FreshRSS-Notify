@@ -1,8 +1,51 @@
 $(function () {
   const $container = $('.rss-item-container .mCSB_container');
   
-  for (let i = 0; i < 5; i++) {
-    const rss_item = $(getTemplate('tpl-rss-item'));
-    $container.append(rss_item);
-  }
+  const $unreads = $('js-nb-unreads');
+  manager.addListener(EVENT_OBTAIN_NBUNREADS, ({data: nbunreads}) => {
+    $unreads.text(nbunreads);
+  });
+  
+  $container.css({
+    'display': 'flex',
+    'flex-direction': 'column'
+  });
+  
+  manager.addListener(EVENT_OBTAIN_RSS, ({data}) => {
+    // remove old item
+    const rss = data;
+    console.log(rss);
+    
+    $container.find(`.rss-item[data-order=${rss.id}]`).remove();
+    const $rss_item = $(getTemplate('tpl-rss-item')).find('.rss-item');
+    $container.append($rss_item);
+    
+    $rss_item
+      .attr('data-order', rss.id)
+      .attr('data-id', rss.itemid)
+      .css('order', rss.id);
+    
+    const $swap_icon = $rss_item.find('.js-swap .fa');
+    $swap_icon.addClass(rss.isRead ? 'fa-envelope-open-o' : 'fa-envelope-o');
+    $swap_icon.addClass(rss.isRead ? 'text-secondary' : 'text-danger');
+    
+    $rss_item.find('.tpl-rss-title')
+      .attr('href', rss.link)
+      .text(rss.title);
+    
+    $rss_item.find('.tpl-rss-content').html(rss.content);
+    
+    $rss_item.find('.tpl-rss-origin-title')
+      .attr('href', rss.origin.htmlUrl || rss.origin.url)
+      .text(rss.origin.title);
+  });
+  
+  const $btn_refresh = $('.js-refresh');
+  $btn_refresh.click(_ => manager.fire(EVENT_ASK_REFRESH_RSS, true));
+  
+  const $rss_instance_link = $('.js-rss-instance-link');
+  manager.addListener(EVENT_OBTAIN_PARAMS, ({data: params}) => {
+    $rss_instance_link.attr('href', params[PARAM_URL_MAIN]);
+  });
+  manager.fire(EVENT_REQUEST_PARAMS);
 });

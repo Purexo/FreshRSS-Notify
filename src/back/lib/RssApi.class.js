@@ -227,58 +227,80 @@ class RssApi {
       });
   }
   
-  getNbUnreads () {
-    return this.api.then(url => {
-      url = `${url}${RssApi.PART_UNREAD}`;
-      const headers = this.authHeader;
-      
-      return get.json(url, {headers})
-        .then(data => data.max);
-    });
+  async getNbUnreads () {
+    const base_url = await this.api;
+    const url = `${base_url}${RssApi.PART_UNREAD}`;
+    const headers = this.authHeader;
+    
+    const {json: data} = await get.json(url, {headers});
+    
+    return data.max;
   }
   
-  getStreamsContent ({
+  async cacheSubscriptions() {
+    if (this._cache_subscribtions !== void 0) {
+      return this._cache_subscribtions;
+    }
+    
+    const base_url = await this.api;
+    const headers = this.authHeader;
+    
+    const url = `${base_url}${RssApi.SUBSCRIPTIONS_LIST}`;
+    console.log(url);
+  
+    const {json: {subscriptions}} = await get.json(url, {headers});
+  
+    const result = subscriptions.reduce((result, value) => {
+      result[value.id] = value;
+      
+      return result;
+    }, {});
+    
+    this._cache_subscribtions = result;
+    
+    return result
+  }
+  
+  async getStreamsContent ({
                        nb = void 0,
                        startIndex = 0,
                        filter = ['xt', 'user/-/state/com.google/read'],
                        isRead = false
                      }={}) {
     if (nb === void 0) {
-      return Promise.reject(new Error('No Stream Content to fetch, nb = 0'));
+      throw new Error('No Stream Content to fetch, nb = undefined');
     }
     
-    return this.api
-      .then(url => {
-        const params = new URLParams()
-          .append('output', 'json')
-          .append('r', 'n')
-          .append('n', nb)
-          .append(...filter);
-        const headers = this.authHeader;
-        url = `${url}${RssApi.PART_CONTENT}?${params}`;
-        
-        return get.json(url, {headers})
-          .then(({json}) => json.items.map((item, index) => ({
-            id: index + startIndex,
-            link: item.alternate[0].href,
-            title: item.title,
-            originTitle: item.origin.title,
-            content: item.summary.content,
-            itemid: item.id,
-            isRead,
-            item, // debug TODO remove
-          })));
-      })
+    const base_url = await this.api;
+    const params = new URLParams()
+      .append('output', 'json')
+      .append('r', 'n')
+      .append('n', nb)
+      .append(...filter);
+    const headers = this.authHeader;
+    const url = `${base_url}${RssApi.PART_CONTENT}?${params}`;
+    
+    const [{json}, cache] = await Promise.all([get.json(url, {headers}), this.cacheSubscriptions()]);
+    console.log(cache);
+    
+    return json.items.map((item, index) => ({
+      id: index + startIndex,
+      link: item.alternate[0].href,
+      title: item.title,
+      origin: cache[item.origin.streamId],
+      content: item.summary.content,
+      itemid: item.id,
+      isRead
+    }));
   }
   
-  getToken () {
-    return this.api.then(url => {
-      url = `${url}${RssApi.PART_TOKEN}`;
-      const headers = this.authHeader;
-      
-      return get.text(url, {headers})
-        .then(({text}) => text);
-    });
+  async getToken () {
+    const base_url = await this.api;
+    const url = `${base_url}${RssApi.PART_TOKEN}`;
+    
+    const {text} = await get.text(url, {headers});
+    
+    return text;
   }
   
   swapeState (itemid, isRead) {
@@ -306,3 +328,4 @@ RssApi.PART_UNREAD = '/reader/api/0/unread-count?output=json';
 RssApi.PART_TOKEN = '/reader/api/0/token';
 RssApi.PART_SWAP = '/reader/api/0/edit-tag';
 RssApi.PART_CONTENT = '/reader/api/0/stream/contents/reading-list';
+RssApi.SUBSCRIPTIONS_LIST = '/reader/api/0/subscription/list?output=json';

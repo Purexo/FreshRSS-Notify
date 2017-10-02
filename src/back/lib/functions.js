@@ -12,7 +12,7 @@ function saveInStorage (params) {
   browser.storage.sync.set(params);
 }
 
-function shouldSavaParams (checkedParams, oldParams) {
+function shouldSaveParams (checkedParams, oldParams) {
   let persist = false;
   
   for (let name of STORAGE_GET_ALL_PARAMS) {
@@ -28,31 +28,59 @@ function shouldSavaParams (checkedParams, oldParams) {
 function normalyzeParams (params) {
   const checkedParams = Object.assign({}, DEFAULT_PARAMS, params);
   
-  if (shouldSavaParams(checkedParams, params)) {
+  if (shouldSaveParams(checkedParams, params)) {
     saveInStorage(checkedParams);
   }
   
   return checkedParams;
 }
 
+function syncParameters() {
+  return Promise.all([
+      browser.storage.local.get(STORAGE_GET_ALL_PARAMS),
+      browser.storage.sync.get(STORAGE_GET_ALL_PARAMS)
+    ])
+    .then(([local, sync]) => {
+      for (let key of STORAGE_GET_ALL_PARAMS) {
+        if (sync[key] === void 0) {
+          sync[key] = local[key];
+        }
+        if (local[key] === void 0) {
+          local[key] = sync[key]
+        }
+  
+        if (sync[key] === void 0) {
+          sync[key] = DEFAULT_PARAMS[key];
+        }
+        if (local[key] === void 0) {
+          local[key] = DEFAULT_PARAMS[key]
+        }
+      }
+  
+      local = normalyzeParams(local);
+      saveInStorage(local);
+      
+      return local;
+    });
+}
+
+function getParameters() {
+  return browser.storage.local.get(STORAGE_GET_ALL_PARAMS)
+    .then(normalyzeParams);
+}
+
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function PromiseWaitAll(promises) {
+function PromiseWaitAll(...promises) {
   return new Promise(function (resolve, reject) {
-    if (typeof promises[Symbol.iterator] !== 'function') {
-      reject('promises should be an Iterable of Promise');
-    }
-    let count = promises.length || typeof promises.size;
-    const results = new Map();
+    let count = promises.length;
+    const results = new Array(count);
     
-    // iterate over iterable
-    // array not work with [index, value] array.entries() did
-    const iterator = typeof promises.entries == 'function' ? promises.entries() : promises;
-    for (let [index, promise] of iterator) {
+    for (let [index, promise] of promises.entries()) {
       let handler = data => {
-        results.set(index, data);
+        results[index] = data;
         if (--count == 0) {
           resolve(results);
         }

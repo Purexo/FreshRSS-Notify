@@ -1,3 +1,9 @@
+body {
+    height: 600px;
+    width: 600px;
+    font-size: 0.75rem;
+}
+
 .fa {
     font-size: 1.5em;
 }
@@ -13,7 +19,7 @@
 }
 
 .mCustomScrollbar {
-    height: 440px;
+    height: 537px;
 }
 
 .mCSB_inside > .mCSB_container {
@@ -30,4 +36,13 @@
 
 .mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
     background-color: rgba(0,0,0,.40);
+}
+
+.rss-item .js-swap {
+    padding: 0.5rem;
+    margin-left: -0.5rem;
+}
+
+.rss-item a {
+    line-height: 1;
 }
