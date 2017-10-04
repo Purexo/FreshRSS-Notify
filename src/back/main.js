@@ -8,6 +8,7 @@ function resetAutoRefreshAlarm(runNow = true) {
   
   runNow && manager.fire(EVENT_LOOP_AUTO_REFRESH);
 }
+
 const API = new RssApi();
 cache = {
   rss: undefined,
@@ -24,11 +25,19 @@ browser.alarms.onAlarm.addListener(alarm => {
   manager.fire(alarm.name, alarm);
 });
 
+browser.runtime.onMessage.addListener(({name=undefined, ...data}) => {
+  console.log(`BACK_RUNTIME_ONMESSAGE: ${name} with `, data);
+  
+  if (!name) return;
+  
+  manager.fire(name, data);
+});
+
 manager.addListener(EVENT_REQUEST_NBUNREADS, async () => {
   const nbunreads = API.auth ? await API.getNbUnreads() : await API.connect().then(_ => API.getNbUnreads());
   
   cache.unreads = nbunreads;
-  manager.fire(EVENT_OBTAIN_NBUNREADS, nbunreads);
+  browser.runtime.sendMessage({name: EVENT_OBTAIN_NBUNREADS, nbunreads});
 });
 
 /**
@@ -43,7 +52,7 @@ manager.addListener(EVENT_LOOP_AUTO_REFRESH, () => {
     API.auth ? API.getNbUnreads() : API.connect().then(_ => API.getNbUnreads())
   ]).then(([prefs, nbunreads]) => {
     cache.unreads = nbunreads;
-    manager.fire(EVENT_OBTAIN_NBUNREADS, nbunreads);
+    browser.runtime.sendMessage({name: EVENT_OBTAIN_NBUNREADS, nbunreads});
     
     const totalFxToFetch = prefs[PARAM_NB_FETCH_ITEMS];
     const unreadToFetch = clamp(nbunreads, 0, totalFxToFetch);
@@ -63,7 +72,7 @@ manager.addListener(EVENT_LOOP_AUTO_REFRESH, () => {
         
         data.forEach(rss => {
           cache.rss.set(rss.id, rss);
-          manager.fire(EVENT_OBTAIN_RSS, rss);
+          browser.runtime.sendMessage({name: EVENT_OBTAIN_RSS, rss});
         });
       }));
   
@@ -75,7 +84,7 @@ manager.addListener(EVENT_LOOP_AUTO_REFRESH, () => {
   });
 });
 
-manager.addListener(EVENT_REQUEST_RSS, ({data: runNow}) => {
+manager.addListener(EVENT_REQUEST_RSS, ({data: {runNow}}) => {
   resetAutoRefreshAlarm(runNow);
 });
 
@@ -98,7 +107,7 @@ manager.addListener(EVENT_REQUEST_PARAMS, () => {
   getParameters()
     .then(params => {
       cache.params = params;
-      manager.fire(EVENT_OBTAIN_PARAMS, params);
+      browser.runtime.sendMessage({name: EVENT_OBTAIN_PARAMS, params});
     })
     .catch(err => console.error(err));
 });

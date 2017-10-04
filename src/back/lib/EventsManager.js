@@ -78,11 +78,7 @@ const manager = (function () {
       dispatcher
         .forEach(listener => {
           if (typeof listener === 'function') {
-            try {
-              listener(event);
-            } catch (e) {
-              console.error(e);
-            }
+            listener(event);
           }
         });
     }

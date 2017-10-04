@@ -12,20 +12,7 @@
   ],
 
   "background": {
-    "scripts": [
-      "src/back/lib/from_npm/i18next.js",
-      "src/back/lib/from_npm/browser-polyfill.js",
-
-      "src/constants.js",
-
-      "src/back/lib/EventsManager.js",
-      "src/back/lib/fetch.js",
-      "src/back/lib/functions.js",
-      "src/back/lib/RssApi.class.js",
-      "src/back/lib/Notification.class.js",
-
-      "src/back/main.js"
-    ]
+    "page": "src/back/index.html"
   },
 
   "browser_action": {
