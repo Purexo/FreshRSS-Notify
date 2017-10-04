@@ -6,9 +6,14 @@ function resetAutoRefreshAlarm(runNow = true) {
     }))
     .catch(err => console.error(err));
   
-  manager.fire(EVENT_LOOP_AUTO_REFRESH);
+  runNow && manager.fire(EVENT_LOOP_AUTO_REFRESH);
 }
 const API = new RssApi();
+cache = {
+  rss: undefined,
+  unreads: undefined,
+  params: undefined
+};
 
 /**
  * simple routing alarm
@@ -17,6 +22,13 @@ const API = new RssApi();
  */
 browser.alarms.onAlarm.addListener(alarm => {
   manager.fire(alarm.name, alarm);
+});
+
+manager.addListener(EVENT_REQUEST_NBUNREADS, async () => {
+  const nbunreads = API.auth ? await API.getNbUnreads() : await API.connect().then(_ => API.getNbUnreads());
+  
+  cache.unreads = nbunreads;
+  manager.fire(EVENT_OBTAIN_NBUNREADS, nbunreads);
 });
 
 /**
@@ -30,7 +42,9 @@ manager.addListener(EVENT_LOOP_AUTO_REFRESH, () => {
     getParameters(),
     API.auth ? API.getNbUnreads() : API.connect().then(_ => API.getNbUnreads())
   ]).then(([prefs, nbunreads]) => {
+    cache.unreads = nbunreads;
     manager.fire(EVENT_OBTAIN_NBUNREADS, nbunreads);
+    
     const totalFxToFetch = prefs[PARAM_NB_FETCH_ITEMS];
     const unreadToFetch = clamp(nbunreads, 0, totalFxToFetch);
     const readToFetch = totalFxToFetch - unreadToFetch;
@@ -45,7 +59,12 @@ manager.addListener(EVENT_LOOP_AUTO_REFRESH, () => {
     
     Promise.all([fetchUnread, fetchRead])
       .then(results => results.forEach(data => {
-        data.forEach(rss => manager.fire(EVENT_OBTAIN_RSS, rss));
+        cache.rss = cache.rss || new Map();
+        
+        data.forEach(rss => {
+          cache.rss.set(rss.id, rss);
+          manager.fire(EVENT_OBTAIN_RSS, rss);
+        });
       }));
   
     browser.browserAction.setBadgeText({text: `${nbunreads}`});
@@ -56,7 +75,7 @@ manager.addListener(EVENT_LOOP_AUTO_REFRESH, () => {
   });
 });
 
-manager.addListener(EVENT_ASK_REFRESH_RSS, ({data: runNow}) => {
+manager.addListener(EVENT_REQUEST_RSS, ({data: runNow}) => {
   resetAutoRefreshAlarm(runNow);
 });
 
@@ -77,7 +96,10 @@ manager.addListener(
  */
 manager.addListener(EVENT_REQUEST_PARAMS, () => {
   getParameters()
-    .then(params => manager.fire(EVENT_OBTAIN_PARAMS, params))
+    .then(params => {
+      cache.params = params;
+      manager.fire(EVENT_OBTAIN_PARAMS, params);
+    })
     .catch(err => console.error(err));
 });
 

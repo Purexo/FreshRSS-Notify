@@ -34,7 +34,8 @@
       "32": "Assets/img/icon.png"
     },
     "default_title": "FreshRSS Notify",
-    "default_popup": "src/front/panel/index.html"
+    "default_popup": "src/front/panel/index.html",
+    "browser_style": false
   },
 
   "options_ui": {

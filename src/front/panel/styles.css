@@ -8,6 +8,10 @@ body {
     font-size: 1.5em;
 }
 
+.navbar img.logo {
+    height: 30px;
+}
+
 .nav-item {
     text-align: center;
     margin-left: 0.25em;
@@ -45,4 +49,9 @@ body {
 
 .rss-item a {
     line-height: 1;
+}
+
+.rss-item img {
+    max-width: 100% !important;
+    height: auto !important;
 }

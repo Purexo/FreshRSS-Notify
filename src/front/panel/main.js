@@ -1,7 +1,35 @@
-$(function () {
-  const $container = $('.rss-item-container .mCSB_container');
+async function renewFromCache() {
+  const background = await browser.runtime.getBackgroundPage();
+  const manager = background.manager;
   
-  const $unreads = $('js-nb-unreads');
+  if (background.cache.rss) {
+    for (let [index, rss] of background.cache.rss) {
+      manager.fire(EVENT_OBTAIN_RSS, rss);
+    }
+  } else {
+    manager.fire(EVENT_REQUEST_RSS);
+  }
+  
+  if (background.cache.unreads) {
+    manager.fire(EVENT_OBTAIN_NBUNREADS, background.cache.unreads);
+  } else {
+    manager.fire(EVENT_REQUEST_NBUNREADS);
+  }
+  
+  if (background.cache.params) {
+    manager.fire(EVENT_OBTAIN_PARAMS, background.cache.params);
+  } else {
+    manager.fire(EVENT_REQUEST_PARAMS);
+  }
+}
+
+$(async function () {
+  const background = await browser.runtime.getBackgroundPage();
+  const manager = background.manager;
+  
+  const $container = $('.rss-item-container .mCSB_container');
+  const $unreads = $('.js-nb-unreads');
+  
   manager.addListener(EVENT_OBTAIN_NBUNREADS, ({data: nbunreads}) => {
     $unreads.text(nbunreads);
   });
@@ -13,10 +41,8 @@ $(function () {
   
   manager.addListener(EVENT_OBTAIN_RSS, ({data}) => {
     // remove old item
-    const rss = data;
-    console.log(rss);
-    
     $container.find(`.rss-item[data-order=${rss.id}]`).remove();
+    
     const $rss_item = $(getTemplate('tpl-rss-item')).find('.rss-item');
     $container.append($rss_item);
     
@@ -41,7 +67,7 @@ $(function () {
   });
   
   const $btn_refresh = $('.js-refresh');
-  $btn_refresh.click(_ => manager.fire(EVENT_ASK_REFRESH_RSS, true));
+  $btn_refresh.click(_ => manager.fire(EVENT_REQUEST_RSS, true));
   
   const $rss_instance_link = $('.js-rss-instance-link');
   manager.addListener(EVENT_OBTAIN_PARAMS, ({data: params}) => {

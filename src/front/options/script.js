@@ -1,5 +1,4 @@
 $(function $_on_ready_handler() {
-  
   /**
    * Take an element and return his name and value
    *

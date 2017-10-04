@@ -58,7 +58,7 @@ const manager = (function () {
       const dispatcher = this._getNameDispatcher(name);
       dispatcher.push(listener);
 
-      return listener;
+      return [name, listener];
     }
 
     /**
