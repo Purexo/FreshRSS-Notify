@@ -1,3 +1,5 @@
+const manager = new EventsManager(true);
+
 function resetAutoRefreshAlarm(runNow = true) {
   browser.alarms.clear(EVENT_LOOP_AUTO_REFRESH)
     .then(cleared => getAutoRefreshTime())
@@ -25,19 +27,20 @@ browser.alarms.onAlarm.addListener(alarm => {
   manager.fire(alarm.name, alarm);
 });
 
-browser.runtime.onMessage.addListener(({name=undefined, ...data}) => {
-  console.log(`BACK_RUNTIME_ONMESSAGE: ${name} with `, data);
+browser.runtime.onMessage.addListener(({name='', ...data}, sender, sendResponse) => {
+  console.log(`BACK_RUNTIME_ONMESSAGE: ${name} with `, data, sender);
   
   if (!name) return;
+  manager.fire(name, data, sendResponse);
   
-  manager.fire(name, data);
+  return true;
 });
 
-manager.addListener(EVENT_REQUEST_NBUNREADS, async () => {
+manager.addListener(EVENT_REQUEST_NBUNREADS, async (name, data, sendResponse) => {
   const nbunreads = API.auth ? await API.getNbUnreads() : await API.connect().then(_ => API.getNbUnreads());
   
   cache.unreads = nbunreads;
-  browser.runtime.sendMessage({name: EVENT_OBTAIN_NBUNREADS, nbunreads});
+  sendResponse(nbunreads);
 });
 
 /**
@@ -46,41 +49,42 @@ manager.addListener(EVENT_REQUEST_NBUNREADS, async () => {
  * 2. fetch flux
  * 3. display them in panel
  */
-manager.addListener(EVENT_LOOP_AUTO_REFRESH, () => {
-  Promise.all([
+manager.addListener(EVENT_LOOP_AUTO_REFRESH, async (name, data, sendResponse) => {
+  const [prefs, nbunreads] = await Promise.all([
     getParameters(),
     API.auth ? API.getNbUnreads() : API.connect().then(_ => API.getNbUnreads())
-  ]).then(([prefs, nbunreads]) => {
-    cache.unreads = nbunreads;
-    browser.runtime.sendMessage({name: EVENT_OBTAIN_NBUNREADS, nbunreads});
-    
-    const totalFxToFetch = prefs[PARAM_NB_FETCH_ITEMS];
-    const unreadToFetch = clamp(nbunreads, 0, totalFxToFetch);
-    const readToFetch = totalFxToFetch - unreadToFetch;
-    
-    const fetchUnread = API.getStreamsContent({nb: unreadToFetch});
-    const fetchRead = API.getStreamsContent({
+  ]);
+  
+  cache.unreads = nbunreads;
+  browser.runtime.sendMessage({name: EVENT_OBTAIN_NBUNREADS, nbunreads});
+  
+  const totalFxToFetch = prefs[PARAM_NB_FETCH_ITEMS];
+  const unreadToFetch = clamp(nbunreads, 0, totalFxToFetch);
+  const readToFetch = totalFxToFetch - unreadToFetch;
+  
+  const [results] = Promise.all([
+    API.getStreamsContent({nb: unreadToFetch}),
+    API.getStreamsContent({
       nb: readToFetch,
       startIndex: unreadToFetch,
       filter: ['xt', 'user/-/state/com.google/unread'],
       isRead: true
-    });
-    
-    Promise.all([fetchUnread, fetchRead])
-      .then(results => results.forEach(data => {
-        cache.rss = cache.rss || new Map();
-        
-        data.forEach(rss => {
-          cache.rss.set(rss.id, rss);
-          browser.runtime.sendMessage({name: EVENT_OBTAIN_RSS, rss});
-        });
-      }));
+    })
+  ]);
   
-    browser.browserAction.setBadgeText({text: `${nbunreads}`});
-    browser.browserAction.setIcon({path: 'Assets/img/icon.png'});
-    browser.browserAction.setBadgeBackgroundColor({
-      color: nbunreads > 0 ? (NOTIFICATIONS[NOTIFICATION_REFRESH_SUCCESS].create(), 'red') : 'green'
+  results.forEach(data => {
+    cache.rss = cache.rss || new Map();
+    
+    data.forEach(rss => {
+      cache.rss.set(rss.id, rss);
+      browser.runtime.sendMessage({name: EVENT_OBTAIN_RSS, rss});
     });
+  });
+  
+  browser.browserAction.setBadgeText({text: `${nbunreads}`});
+  browser.browserAction.setIcon({path: 'Assets/img/icon.png'});
+  browser.browserAction.setBadgeBackgroundColor({
+    color: nbunreads > 0 ? (NOTIFICATIONS[NOTIFICATION_REFRESH_SUCCESS].create(), 'red') : 'green'
   });
 });
 
