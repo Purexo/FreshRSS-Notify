@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "web-ext run",
-
     "fetch-deps": "node npm_scripts/fetch_dependencies.js",
     "postinstall": "npm run fetch-deps",
     "postupdate": "npm run fetch-deps"
@@ -33,11 +32,10 @@
   },
   "homepage": "https://github.com/Purexo/FreshRSS-Notify#readme",
   "devDependencies": {
-    "simple-server": "^1.0.1",
     "web-ext": "^1.10.1"
   },
   "dependencies": {
     "i18next": "^8.4.3",
-    "webextension-polyfill": "^0.1.1"
+    "webextension-polyfill": "^0.1.2"
   }
 }
