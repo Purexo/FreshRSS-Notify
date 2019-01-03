@@ -1,15 +1,48 @@
 body {
-    height: 600px;
-    width: 600px;
+    height: 100%;
+    width: 100%;
+
+    overflow: hidden;
+
+    padding: 0;
+    margin: 0;
     font-size: 0.75rem;
+}
+
+.rss-item-container.container-fluid {
+    max-height: 541px;
+    max-width: 600px;
+    overflow-y: auto;
 }
 
 .fa {
     font-size: 1.5em;
 }
 
+.navbar.navbar-fixed {
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+.navbar.navbar-expand-lg {
+    width: 100%;
+}
+
+.navbar.navbar-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.navbar.navbar-sticky.navbar-sticky-top {
+    top: 0;
+}
+
 .navbar img.logo {
     height: 30px;
+}
+
+.navbar-nav .nav-link {
+    padding: 0.5rem 0.75rem;
 }
 
 .nav-item {
@@ -22,26 +55,6 @@ body {
     background-color: #2e3133 !important;
 }
 
-.mCustomScrollbar {
-    height: 537px;
-}
-
-.mCSB_inside > .mCSB_container {
-    margin-right: 15px;
-}
-
-.mCS-dark.mCSB_scrollTools.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dragger_bar {
-    background-color: rgba(0,0,0,.60);
-}
-
-.mCS-dark.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar {
-    background-color: rgba(0,0,0,.50);
-}
-
-.mCS-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
-    background-color: rgba(0,0,0,.40);
-}
-
 .rss-item .js-swap {
     padding: 0.5rem;
     margin-left: -0.5rem;
@@ -49,9 +62,19 @@ body {
 
 .rss-item a {
     line-height: 1;
+    font-size: larger;
+    color: #a0a0a0;
+    font-weight: bolder;
+}
+.rss-item a:visited {
+    color: grey;
 }
 
 .rss-item img {
     max-width: 100% !important;
     height: auto !important;
+}
+
+.rss-item .card-header {
+    padding: 0 1.25rem;
 }

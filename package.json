@@ -4,10 +4,10 @@
   "description": "// TODO ALL",
   "main": "index.js",
   "scripts": {
-    "start": "web-ext run",
+    "start": "web-ext run --firefox-profile FreshRSS --keep-profile-changes --start-url about:debugging",
     "fetch-deps": "node npm_scripts/fetch_dependencies.js",
-    "postinstall": "npm run fetch-deps",
-    "postupdate": "npm run fetch-deps"
+    "postinstall": "echo npm run fetch-deps",
+    "postupdate": "echo npm run fetch-deps"
   },
   "config": {
     "files": [
@@ -32,10 +32,9 @@
   },
   "homepage": "https://github.com/Purexo/FreshRSS-Notify#readme",
   "devDependencies": {
-    "web-ext": "^1.10.1"
+    "@types/jquery": "^3.3.29",
+    "web-ext": "^2.9.3",
+    "web-ext-types": "^3.1.0"
   },
-  "dependencies": {
-    "i18next": "^8.4.3",
-    "webextension-polyfill": "^0.1.2"
-  }
+  "dependencies": {}
 }

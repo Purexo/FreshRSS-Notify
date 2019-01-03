@@ -17,6 +17,8 @@ const EVENT_OBTAIN_NBUNREADS = 'event-obtain-nbunreads';
 const EVENT_OBTAIN_RSS = 'event-obtain-rss';
 const EVENT_REQUEST_RSS = 'event-request-rss';
 
+const EVENT_REQUEST_SWAP = 'event-request-swap';
+
 const PARAM_URL_MAIN = 'url-main';
 const PARAM_URL_API = 'url-api';
 const PARAM_LOGIN = 'login';

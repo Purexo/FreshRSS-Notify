@@ -1,5 +1,8 @@
-function listenRuntimeMessage(background) {
-  background.runtime.onMessage.addListener(({name=undefined, ...data}) => {
+let background;
+const manager = new EventsManager();
+
+function listenRuntimeMessage() {
+  browser.runtime.onMessage.addListener(({name=undefined, ...data}) => {
     if (!name) return;
     
     console.log(`FRONT_RUNTIME_ONMESSAGE: ${name} with `, data);
@@ -8,44 +11,35 @@ function listenRuntimeMessage(background) {
   });
 }
 
-function renewFromCache(background) {
-  if (background.cache.rss) {
-    for (let [index, rss] of background.cache.rss) {
-      manager.fire(EVENT_OBTAIN_RSS, {rss});
+function renewFromCache({rss, unreads, params}) {
+  if (rss) {
+    for (let [id, item] of rss) {
+      manager.fire(EVENT_OBTAIN_RSS, {id, rss: item});
     }
   } else {
-    background.runtime.sendMessage({name: EVENT_REQUEST_RSS});
+    browser.runtime.sendMessage({name: EVENT_REQUEST_RSS}).catch(console.error);
   }
-  
-  if (background.cache.unreads) {
-    manager.fire(EVENT_OBTAIN_NBUNREADS, {nbunreads: background.cache.unreads});
-  } else {
-    background.runtime.sendMessage({name: EVENT_REQUEST_NBUNREADS});
-  }
-  
-  if (background.cache.params) {
-    manager.fire(EVENT_OBTAIN_PARAMS, {params: background.cache.params});
-  } else {
-    background.runtime.sendMessage({name: EVENT_REQUEST_PARAMS});
-  }
+
+  unreads
+    ? manager.fire(EVENT_OBTAIN_NBUNREADS, {nbunreads: unreads})
+    : browser.runtime.sendMessage({name: EVENT_REQUEST_NBUNREADS}).catch(console.error);
+
+  params
+    ? manager.fire(EVENT_OBTAIN_PARAMS, {params})
+    : browser.runtime.sendMessage({name: EVENT_REQUEST_PARAMS}).catch(console.error);
 }
 
-$(async function () {
-  const background = await browser.runtime.getBackgroundPage();
-  
-  const $container = $('.rss-item-container .mCSB_container');
+(async function () {
+  background = await browser.runtime.getBackgroundPage();
+  const $container = $('.rss-item-container');
   const $unreads = $('.js-nb-unreads');
+  const $btn_refresh = $('.js-refresh');
+  const $rss_instance_link = $('.js-rss-instance-link');
   
-  manager.addListener(EVENT_OBTAIN_NBUNREADS, ({data: {nbunreads}}) => {
-    $unreads.text(nbunreads);
-  });
-  
-  $container.css({
-    'display': 'flex',
-    'flex-direction': 'column'
-  });
-  
-  manager.addListener(EVENT_OBTAIN_RSS, ({data: {rss}}) => {
+  manager.addListener(EVENT_OBTAIN_NBUNREADS, ({nbunreads}) => $unreads.text(nbunreads));
+  manager.addListener(EVENT_OBTAIN_RSS, ({id, rss}) => {
+    console.log(id, rss);
+
     // remove old item
     $container.find(`.rss-item[data-order=${rss.id}]`).remove();
     
@@ -62,6 +56,12 @@ $(async function () {
     $swap_icon.addClass(rss.isRead ? 'text-secondary' : 'text-danger');
     
     $rss_item.find('.tpl-rss-title')
+      .on('click', event => {
+        event.preventDefault();
+
+        browser.tabs.create({active: true, url: event.currentTarget.getAttribute('href')})
+          .catch(console.error)
+      })
       .attr('href', rss.link)
       .text(rss.title);
     
@@ -70,16 +70,27 @@ $(async function () {
     $rss_item.find('.tpl-rss-origin-title')
       .attr('href', rss.origin.htmlUrl || rss.origin.url)
       .text(rss.origin.title);
+
+    $rss_item.find('.js-swap').on('click', event => {
+      event.preventDefault();
+
+      browser.runtime.sendMessage({
+        name: EVENT_REQUEST_SWAP,
+        itemid: rss.itemid,
+        isRead: rss.isRead,
+      }).catch(console.error);
+
+      $swap_icon
+        .toggleClass('fa-envelope-open-o')
+        .toggleClass('fa-envelope-o')
+        .toggleClass('text-secondary')
+        .toggleClass('text-danger')
+    })
   });
+  manager.addListener(EVENT_OBTAIN_PARAMS, ({params}) => $rss_instance_link.attr('href', params[PARAM_URL_MAIN]));
+
+  $btn_refresh.on('click', () => browser.runtime.sendMessage({name: EVENT_REQUEST_RSS, runNow: true}).catch(console.error));
   
-  const $btn_refresh = $('.js-refresh');
-  $btn_refresh.click(_ => background.runtime.sendMessage({name: EVENT_REQUEST_RSS, runNow: true}));
-  
-  const $rss_instance_link = $('.js-rss-instance-link');
-  manager.addListener(EVENT_OBTAIN_PARAMS, ({data: {params}}) => {
-    $rss_instance_link.attr('href', params[PARAM_URL_MAIN]);
-  });
-  
-  listenRuntimeMessage(background);
-  renewFromCache(background);
-});
+  listenRuntimeMessage();
+  renewFromCache(background.cache);
+})();

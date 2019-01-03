@@ -54,11 +54,8 @@ class EventsManager {
     this._debug && (console.log(`event ${name} is fired with data :`, ...args) || console.trace());
     
     dispatcher
-      .forEach(listener => {
-        if (typeof listener === 'function') {
-          listener(name, ...args);
-        }
-      });
+      .filter(l => typeof l === 'function')
+      .forEach(listener => listener(...args, name));
   }
   
   /**
@@ -100,7 +97,7 @@ class EventsManager {
   }
   
   set debug(debug) {
-    this._debug = debug;
+    this._debug = !!debug;
     
     return true;
   }

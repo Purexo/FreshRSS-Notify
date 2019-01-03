@@ -36,11 +36,11 @@ browser.runtime.onMessage.addListener(({name='', ...data}, sender, sendResponse)
   return true;
 });
 
-manager.addListener(EVENT_REQUEST_NBUNREADS, async (name, data, sendResponse) => {
+manager.addListener(EVENT_REQUEST_NBUNREADS, async () => {
   const nbunreads = API.auth ? await API.getNbUnreads() : await API.connect().then(_ => API.getNbUnreads());
   
   cache.unreads = nbunreads;
-  sendResponse(nbunreads);
+  browser.runtime.sendMessage({name: EVENT_OBTAIN_NBUNREADS, nbunreads}).catch(console.error);
 });
 
 /**
@@ -49,20 +49,20 @@ manager.addListener(EVENT_REQUEST_NBUNREADS, async (name, data, sendResponse) =>
  * 2. fetch flux
  * 3. display them in panel
  */
-manager.addListener(EVENT_LOOP_AUTO_REFRESH, async (name, data, sendResponse) => {
+manager.addListener(EVENT_LOOP_AUTO_REFRESH, async () => {
   const [prefs, nbunreads] = await Promise.all([
     getParameters(),
-    API.auth ? API.getNbUnreads() : API.connect().then(_ => API.getNbUnreads())
+    API.auth ? API.getNbUnreads() : API.connect().then(() => API.getNbUnreads())
   ]);
   
   cache.unreads = nbunreads;
-  browser.runtime.sendMessage({name: EVENT_OBTAIN_NBUNREADS, nbunreads});
+  browser.runtime.sendMessage({name: EVENT_OBTAIN_NBUNREADS, nbunreads}).catch(console.error);
   
   const totalFxToFetch = prefs[PARAM_NB_FETCH_ITEMS];
   const unreadToFetch = clamp(nbunreads, 0, totalFxToFetch);
   const readToFetch = totalFxToFetch - unreadToFetch;
   
-  const [results] = Promise.all([
+  const articles = await Promise.all([
     API.getStreamsContent({nb: unreadToFetch}),
     API.getStreamsContent({
       nb: readToFetch,
@@ -71,25 +71,28 @@ manager.addListener(EVENT_LOOP_AUTO_REFRESH, async (name, data, sendResponse) =>
       isRead: true
     })
   ]);
-  
-  results.forEach(data => {
-    cache.rss = cache.rss || new Map();
-    
-    data.forEach(rss => {
+
+  cache.rss = cache.rss || new Map();
+  cache.rss.clear();
+  articles.reduce((res, arr) => res.concat(arr), [])
+    .forEach(rss => {
       cache.rss.set(rss.id, rss);
-      browser.runtime.sendMessage({name: EVENT_OBTAIN_RSS, rss});
+      browser.runtime.sendMessage({name: EVENT_OBTAIN_RSS, id: rss.id, rss}).catch(console.error);
     });
-  });
   
   browser.browserAction.setBadgeText({text: `${nbunreads}`});
-  browser.browserAction.setIcon({path: 'Assets/img/icon.png'});
+  browser.browserAction.setIcon({path: '/Assets/img/icon.png'}).catch(console.error);
   browser.browserAction.setBadgeBackgroundColor({
     color: nbunreads > 0 ? (NOTIFICATIONS[NOTIFICATION_REFRESH_SUCCESS].create(), 'red') : 'green'
   });
 });
 
-manager.addListener(EVENT_REQUEST_RSS, ({data: {runNow}}) => {
+manager.addListener(EVENT_REQUEST_RSS, ({runNow}) => {
   resetAutoRefreshAlarm(runNow);
+});
+
+manager.addListener(EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE, () => {
+  resetAutoRefreshAlarm(false);
 });
 
 /**
@@ -98,7 +101,7 @@ manager.addListener(EVENT_REQUEST_RSS, ({data: {runNow}}) => {
  */
 manager.addListener(
   EVENT_INPUT_OPTION_CHANGE,
-  ({data: {name, value}}) => saveInStorage({[name]: value})
+  ({paramname, value}) => saveInStorage({[paramname]: value})
 );
 
 /**
@@ -111,15 +114,15 @@ manager.addListener(EVENT_REQUEST_PARAMS, () => {
   getParameters()
     .then(params => {
       cache.params = params;
-      browser.runtime.sendMessage({name: EVENT_OBTAIN_PARAMS, params});
+      return browser.runtime.sendMessage({name: EVENT_OBTAIN_PARAMS, params});
     })
-    .catch(err => console.error(err));
+    .catch(console.error);
 });
 
 /**
  * Check server url
  */
-manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({data: {[PARAM_URL_MAIN]: url_main, [PARAM_URL_API]: url_api}}) => {
+manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({[PARAM_URL_MAIN]: url_main, [PARAM_URL_API]: url_api}) => {
   get.text(url_main)
     .then(response => {
       console.log(response.text);
@@ -133,8 +136,8 @@ manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({data: {[PARAM_URL_MAIN]: 
     });
   
   get.text(url_api)
-    .then(result => console.log(result.text))
-    .catch(error => console.error(error));
+    .then(console.log)
+    .catch(console.error);
 });
 
 /**
@@ -152,8 +155,15 @@ manager.addListener(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, () => {
     })
     .catch(err => {
       console.log(err);
+
       NOTIFICATIONS[NOTIFICATION_CREDENTIALS_CHECK_FAIL].create();
     })
+});
+
+manager.addListener(EVENT_REQUEST_SWAP, ({itemid, isRead}) => {
+  (API.auth ? Promise.resolve() : API.connect())
+    .then(() => API.swapeState(itemid, isRead))
+    .catch(console.error);
 });
 
 syncParameters()

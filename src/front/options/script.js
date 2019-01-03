@@ -3,11 +3,11 @@ $(function $_on_ready_handler() {
    * Take an element and return his name and value
    *
    * @param {HTMLInputElement} element
-   * @returns {{name, value}}
+   * @returns {{paramname, value}}
    */
   function getParamFromInput (element) {
     return {
-      name: element.name,
+      paramname: element.name,
       value: element.value
     };
   }
@@ -24,7 +24,9 @@ $(function $_on_ready_handler() {
   
   // Au change input, fire EVENT_INPUT_OPTION_CHANGE avec en données le nom du param et sa nouvelle valeur
   $form.on('change', 'input', /** @this {HTMLInputElement}*/ function $form_input_on_change () {
-    manager.fire(EVENT_INPUT_OPTION_CHANGE, getParamFromInput(this));
+    browser.runtime
+      .sendMessage({name: EVENT_INPUT_OPTION_CHANGE, ...getParamFromInput(this)})
+      .catch(console.error);
   });
   
   /* --- Gestion du slider de délai d'activation --- */
@@ -38,7 +40,9 @@ $(function $_on_ready_handler() {
   });
   // et fire EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE
   $input_refresh_time.on('change', /** @this {HTMLInputElement}*/ function $refresh_time_on_just_change() {
-    manager.fire(EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE, getParamFromInput(this));
+    browser.runtime
+      .sendMessage({name: EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE})
+      .catch(console.error);
   });
   
   /* --- Gestion du fieldset server settings --- */
@@ -48,10 +52,13 @@ $(function $_on_ready_handler() {
   
   // check if server respond
   $btn_check_server.on('click', function $btn_check_server_on_click() {
-    manager.fire(EVENT_INPUT_OPTION_SERVER_CHECK, {
-      [PARAM_URL_MAIN]: $input_input_url_main.val(),
-      [PARAM_URL_API]: $input_input_url_api.val(),
-    });
+    browser.runtime
+      .sendMessage({
+        name: EVENT_INPUT_OPTION_SERVER_CHECK,
+        [PARAM_URL_MAIN]: $input_input_url_main.val(),
+        [PARAM_URL_API]: $input_input_url_api.val(),
+      })
+      .catch(console.error);
   });
   
   /* --- Gestion du fieldset authentification settings --- */
@@ -59,18 +66,36 @@ $(function $_on_ready_handler() {
   
   // check if api respond
   $btn_check_credentials.on('click', function $btn_check_credentials_on_click() {
-    manager.fire(EVENT_INPUT_OPTION_CREDENTIALS_CHECK);
+    browser.runtime
+      .sendMessage({
+        name: EVENT_INPUT_OPTION_CREDENTIALS_CHECK,
+        [PARAM_URL_MAIN]: $input_input_url_main.val(),
+        [PARAM_URL_API]: $input_input_url_api.val(),
+      })
+      .catch(console.error);
   });
   
   /* --- Récupèration des params --- */
   const $all_inputs = $form.find('input');
   
   // demande et récupère les params
-  manager.addListener(EVENT_OBTAIN_PARAMS, ({data: params}) => {
-    console.log(params);
-    $all_inputs.each(function $all_inputs_each() {
-      this.value = params[this.name];
-    });
+  browser.runtime.onMessage.addListener(({name=undefined, ...data}) => {
+    if (!name) return;
+
+    console.log(`FRONT_RUNTIME_ONMESSAGE: ${name} with `, data);
+
+    if (name === EVENT_OBTAIN_PARAMS) {
+      const {params} = data;
+
+      console.log(params);
+
+      $all_inputs.each(function $all_inputs_each() {
+        this.value = params[this.name];
+      });
+    }
   });
-  manager.fire(EVENT_REQUEST_PARAMS);
+
+  browser.runtime
+    .sendMessage({name: EVENT_REQUEST_PARAMS})
+    .catch(console.error);
 });

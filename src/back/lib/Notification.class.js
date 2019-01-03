@@ -17,9 +17,7 @@ class Notification {
                 message,
                 iconUrl = 'Assets/img/icon.png',
                 onClick = () => {},
-                isAuthorized = (params) => {
-                  return true;
-                }
+                isAuthorized = params => true
   }) {
     this.notification_id = notification_id;
     
@@ -67,7 +65,7 @@ class Notification {
   }
   
   onClick() {
-    if (typeof this.onClick === 'function') {
+    if (typeof this._onClick === 'function') {
       this._onClick();
     }
   }

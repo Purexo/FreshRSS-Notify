@@ -68,22 +68,22 @@ class URLParams extends Map {
   /**
    * Prépare une Map prête à etre encodé
    * transforme les values booleene en 1 ou 0,
-   * passe key et value à encodeURIComponent
+   * passe key et value à encodeURI
    *
    * @return {Map}
    */
   map () {
     return this.reduce((prev, value, key) => {
-      key = encodeURIComponent(`${key}`);
+      key = encodeURI(`${key}`);
       
       if (typeof value === 'boolean') {
         value = value ? '1' : '0';
       }
       else if (Array.isArray(value)) {
-        value = value.map(value => encodeURIComponent(`${value}`));
+        value = value.map(value => encodeURI(`${value}`));
       }
       else {
-        value = encodeURIComponent(value);
+        value = encodeURI(value);
       }
       
       return prev.set(key, value);
@@ -120,12 +120,12 @@ class QueryString {
       .split(this.sep)
       .reduce((prev, entry) => {
         let [key, value] = entry.split(this.eq, 2);
-        key = decodeURIComponent(key);
+        key = decodeURI(key);
         // flag
         if (value === void 0) {
           value = true;
         } else {
-          value = decodeURIComponent(value);
+          value = decodeURI(value);
         }
         
         // multiple value with same key
@@ -154,12 +154,12 @@ class QueryString {
     for (let [key, value] of map) {
       if (Array.isArray(value)) {
         entries.push(
-          ...value.map(value => `${encodeURIComponent(`${key}`)}${this.eq}${encodeURIComponent(`${value}`)}`)
+          ...value.map(value => `${encodeURI(`${key}`)}${this.eq}${encodeURI(`${value}`)}`)
         );
         continue;
       }
       
-      entries.push(`${encodeURIComponent(`${key}`)}${this.eq}${encodeURIComponent(`${value}`)}`);
+      entries.push(`${encodeURI(`${key}`)}${this.eq}${encodeURI(`${value}`)}`);
     }
     
     return entries.join(this.sep);
@@ -298,9 +298,9 @@ class RssApi {
     const base_url = await this.api;
     const url = `${base_url}${RssApi.PART_TOKEN}`;
     
-    const {text} = await get.text(url, {headers});
+    const {text} = await get.text(url, {headers: this.authHeader});
     
-    return text;
+    return text.trim();
   }
   
   swapeState (itemid, isRead) {
@@ -311,13 +311,13 @@ class RssApi {
           .append('T', token)
           .append(isRead ? 'r' : 'a', 'user/-/state/com.google/read');
         const headers = this.authHeader;
-        url = `${url}${RssApi.PART_SWAP}?${params}`;
+        url = `${url}${RssApi.PART_SWAP}`;
         
         return get.text(url, {
           method: 'POST',
           headers,
           body: `${params}`
-        });
+        }).then(console.log);
       })
   }
 }

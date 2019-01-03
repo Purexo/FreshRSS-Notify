@@ -7,15 +7,14 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../libs/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../libs/jquery/jquery.mCustomScrollbar.min.css" />
     <link rel="stylesheet" href="../libs/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-dark text-white d-flex flex-column">
+<body class="bg-dark text-white">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-secondary mb-1">
+<nav class="navbar navbar-expand-lg navbar-light navbar-sticky navbar-sticky-top bg-secondary">
     <a class="navbar-brand js-rss-instance-link" href="#" target="_blank">
-        <img class="logo" src="freshrss_logo.png" height="30px">
+        <img class="logo" src="freshrss_logo.png" height="30">
     </a>
 
     <ul class="navbar-nav ml-auto d-flex flex-row justify-content-end w-25">
@@ -33,7 +32,7 @@
     </ul>
 </nav>
 
-<div class="container-fluid mCustomScrollbar pr-0 rss-item-container" data-mcs-theme="dark">
+<div class="container-fluid rss-item-container pt-2 pb-5" data-comment="mCustomScrollbar" data-mcs-theme="dark">
 
 </div>
 
@@ -56,7 +55,6 @@
 
 <!-- jQuery first, then Tether, then Bootstrap JS. -->
 <script src="../libs/jquery/jquery-3.2.1.min.js"></script>
-<script src="../libs/jquery/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="../libs/popper.js"></script>
 <script src="../libs/bootstrap/js/bootstrap.min.js"></script>
 <script src="../../constants.js"></script>
