@@ -27,16 +27,14 @@ browser.alarms.onAlarm.addListener(alarm => {
   manager.fire(alarm.name, alarm);
 });
 
-browser.runtime.onMessage.addListener(({name='', ...data}, sender, sendResponse) => {
-  console.log(`BACK_RUNTIME_ONMESSAGE: ${name} with `, data, sender);
-  
+browser.runtime.onMessage.addListener(({name='', ...data}) => {
   if (!name) return;
-  manager.fire(name, data, sendResponse);
+  manager.fire(name, data);
   
   return true;
 });
 
-manager.addListener(EVENT_REQUEST_NBUNREADS, async () => {
+manager.on(EVENT_REQUEST_NBUNREADS, async () => {
   const nbunreads = API.auth ? await API.getNbUnreads() : await API.connect().then(_ => API.getNbUnreads());
   
   cache.unreads = nbunreads;
@@ -49,7 +47,7 @@ manager.addListener(EVENT_REQUEST_NBUNREADS, async () => {
  * 2. fetch flux
  * 3. display them in panel
  */
-manager.addListener(EVENT_LOOP_AUTO_REFRESH, async () => {
+manager.on(EVENT_LOOP_AUTO_REFRESH, async () => {
   const [prefs, nbunreads] = await Promise.all([
     getParameters(),
     API.auth ? API.getNbUnreads() : API.connect().then(() => API.getNbUnreads())
@@ -87,11 +85,11 @@ manager.addListener(EVENT_LOOP_AUTO_REFRESH, async () => {
   });
 });
 
-manager.addListener(EVENT_REQUEST_RSS, ({runNow}) => {
+manager.on(EVENT_REQUEST_RSS, ({runNow}) => {
   resetAutoRefreshAlarm(runNow);
 });
 
-manager.addListener(EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE, () => {
+manager.on(EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE, () => {
   resetAutoRefreshAlarm(false);
 });
 
@@ -99,7 +97,7 @@ manager.addListener(EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE, () => {
  * User have typed new options
  * store it in storage
  */
-manager.addListener(
+manager.on(
   EVENT_INPUT_OPTION_CHANGE,
   ({paramname, value}) => saveInStorage({[paramname]: value})
 );
@@ -110,7 +108,7 @@ manager.addListener(
  * normalyze them
  * and fire them with EVENT_OBTAIN_PARAMS event
  */
-manager.addListener(EVENT_REQUEST_PARAMS, () => {
+manager.on(EVENT_REQUEST_PARAMS, () => {
   getParameters()
     .then(params => {
       cache.params = params;
@@ -122,11 +120,9 @@ manager.addListener(EVENT_REQUEST_PARAMS, () => {
 /**
  * Check server url
  */
-manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({[PARAM_URL_MAIN]: url_main, [PARAM_URL_API]: url_api}) => {
+manager.on(EVENT_INPUT_OPTION_SERVER_CHECK, ({[PARAM_URL_MAIN]: url_main, [PARAM_URL_API]: url_api}) => {
   get.text(url_main)
     .then(response => {
-      console.log(response.text);
-      
       NOTIFICATIONS[NOTIFICATION_SERVER_CHECK_SUCCESS].create();
     })
     .catch(error => {
@@ -136,18 +132,15 @@ manager.addListener(EVENT_INPUT_OPTION_SERVER_CHECK, ({[PARAM_URL_MAIN]: url_mai
     });
   
   get.text(url_api)
-    .then(console.log)
     .catch(console.error);
 });
 
 /**
  * Check credentials
  */
-manager.addListener(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, () => {
+manager.on(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, () => {
   API.connect()
     .then(token => {
-      console.log(`TOKEN: ${token}`);
-      
       NOTIFICATIONS[NOTIFICATION_CREDENTIALS_CHECK_SUCCESS].create();
       
       // we get a tokem, so reset the autorefresh loop
@@ -160,7 +153,7 @@ manager.addListener(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, () => {
     })
 });
 
-manager.addListener(EVENT_REQUEST_SWAP, ({itemid, isRead}) => {
+manager.on(EVENT_REQUEST_SWAP, ({itemid, isRead}) => {
   (API.auth ? Promise.resolve() : API.connect())
     .then(() => API.swapeState(itemid, isRead))
     .catch(console.error);

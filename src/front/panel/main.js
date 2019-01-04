@@ -5,8 +5,6 @@ function listenRuntimeMessage() {
   browser.runtime.onMessage.addListener(({name=undefined, ...data}) => {
     if (!name) return;
     
-    console.log(`FRONT_RUNTIME_ONMESSAGE: ${name} with `, data);
-    
     manager.fire(name, data);
   });
 }
@@ -36,10 +34,8 @@ function renewFromCache({rss, unreads, params}) {
   const $btn_refresh = $('.js-refresh');
   const $rss_instance_link = $('.js-rss-instance-link');
   
-  manager.addListener(EVENT_OBTAIN_NBUNREADS, ({nbunreads}) => $unreads.text(nbunreads));
-  manager.addListener(EVENT_OBTAIN_RSS, ({id, rss}) => {
-    console.log(id, rss);
-
+  manager.on(EVENT_OBTAIN_NBUNREADS, ({nbunreads}) => $unreads.text(nbunreads));
+  manager.on(EVENT_OBTAIN_RSS, ({id, rss}) => {
     // remove old item
     $container.find(`.rss-item[data-order=${rss.id}]`).remove();
     
@@ -64,8 +60,24 @@ function renewFromCache({rss, unreads, params}) {
       })
       .attr('href', rss.link)
       .text(rss.title);
-    
-    $rss_item.find('.tpl-rss-content').html(rss.content);
+
+    const docHTML = new DOMParser().parseFromString(DOMPurify.sanitize(rss.content), 'text/html');
+    const rssContent = $rss_item.find('.tpl-rss-content')
+      .on('click', 'a', event => {
+        event.preventDefault();
+
+        browser.tabs.create({active: false, url: event.currentTarget.getAttribute('href')})
+          .catch(console.error)
+      })
+      .get(0);
+
+    while (rssContent.hasChildNodes()) {
+      rssContent.firstChild.remove();
+    }
+
+    while(docHTML.body.hasChildNodes()) {
+      rssContent.appendChild(docHTML.body.firstChild);
+    }
     
     $rss_item.find('.tpl-rss-origin-title')
       .attr('href', rss.origin.htmlUrl || rss.origin.url)
@@ -87,9 +99,18 @@ function renewFromCache({rss, unreads, params}) {
         .toggleClass('text-danger')
     })
   });
-  manager.addListener(EVENT_OBTAIN_PARAMS, ({params}) => $rss_instance_link.attr('href', params[PARAM_URL_MAIN]));
 
-  $btn_refresh.on('click', () => browser.runtime.sendMessage({name: EVENT_REQUEST_RSS, runNow: true}).catch(console.error));
+  manager.on(
+    EVENT_OBTAIN_PARAMS,
+    ({params}) => $rss_instance_link.attr('href', params[PARAM_URL_MAIN])
+  );
+
+  $btn_refresh.on(
+    'click',
+    () => browser.runtime
+      .sendMessage({name: EVENT_REQUEST_RSS, runNow: true})
+      .catch(console.error)
+  );
   
   listenRuntimeMessage();
   renewFromCache(background.cache);

@@ -82,12 +82,8 @@ $(function $_on_ready_handler() {
   browser.runtime.onMessage.addListener(({name=undefined, ...data}) => {
     if (!name) return;
 
-    console.log(`FRONT_RUNTIME_ONMESSAGE: ${name} with `, data);
-
     if (name === EVENT_OBTAIN_PARAMS) {
       const {params} = data;
-
-      console.log(params);
 
       $all_inputs.each(function $all_inputs_each() {
         this.value = params[this.name];

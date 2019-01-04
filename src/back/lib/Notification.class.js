@@ -35,13 +35,18 @@ class Notification {
     
     return iconPath;
   }
-  
+
   /**
    * @param {string?} title
    * @param {string?} message
    * @param {string?} iconUrl
    */
-  async create(title, message, iconUrl) {
+  create(title, message, iconUrl) {
+    this._create(title, message, iconUrl)
+      .catch(console.error)
+  }
+
+  async _create(title, message, iconUrl) {
     const params = await getParameters();
     
     if (!this._isAuthorized(params)) {

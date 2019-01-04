@@ -11,100 +11,21 @@ class PreferenceAdapter {
   }
 }
 
-/**
- * This callback is displayed as part of the Requester class.
- * @callback URLParams~reducer
- * @param {*} prev
- * @param {*} value
- * @param {*} key
- * @param {*} origData
- */
+class URLParams extends URLSearchParams {
+  append(key, value) {
+    super.append(key, value);
 
-class URLParams extends Map {
-  /**
-   * Ajoute de façon intelligente des params
-   *
-   * @param {string|*} key - si key n'est pas une string, elle est interpollé en string. {} -> [Object object]
-   * @param value
-   * @return {URLParams} - this, chainable call
-   */
-  append (key, value) {
-    key = `${key}`;
-    
-    if (typeof value === 'boolean') {
-      return this.set(key, value);
-    }
-    
-    if (this.has(key)) {
-      let new_value = this.get(key);
-      if (!Array.isArray(new_value)) {
-        new_value = [new_value];
-      }
-      new_value.push(value);
-      
-      return this.set(key, new_value);
-    }
-    
-    return this.set(key, value);
+    return this;
   }
-  
-  /**
-   * permet de réduire l'URLParams
-   * @param {URLParams~reducer} reducer
-   * @param {*} initialValue
-   * @param {*?} thisArg - this by default (the current URLParams instance)
-   * @return {*} initialValue - transformed by reducer on each iteration
-   */
-  reduce (reducer, initialValue, thisArg) {
-    thisArg = thisArg || this;
-    
-    for (let [key, value] of this) {
-      initialValue = reducer.call(thisArg, initialValue, value, key, this);
-    }
-    
-    return initialValue;
-  }
-  
-  /**
-   * Prépare une Map prête à etre encodé
-   * transforme les values booleene en 1 ou 0,
-   * passe key et value à encodeURI
-   *
-   * @return {Map}
-   */
-  map () {
-    return this.reduce((prev, value, key) => {
-      key = encodeURI(`${key}`);
-      
-      if (typeof value === 'boolean') {
-        value = value ? '1' : '0';
-      }
-      else if (Array.isArray(value)) {
-        value = value.map(value => encodeURI(`${value}`));
-      }
-      else {
-        value = encodeURI(value);
-      }
-      
-      return prev.set(key, value);
-    }, new Map());
-  }
-  
-  /**
-   * Implicit transformation
-   *
-   * @return {string}
-   */
-  toString () {
-    return URLParams.qs.encode(this);
+
+  set(key, value) {
+    super.set(key, value);
+
+    return this;
   }
 }
 
 class QueryString {
-  static getInstance () {
-    return QueryString._defaultInstance;
-  }
-  
   constructor (sep = '&', eq = '=') {
     this.sep = sep;
     this.eq = eq;
@@ -167,8 +88,6 @@ class QueryString {
   
 }
 
-QueryString._defaultInstance = URLParams.qs = new QueryString();
-
 /**
  * @class Headers
  * @extends Map
@@ -205,26 +124,21 @@ class RssApi {
    *
    * @returns {Promise.<string, *>}
    */
-  connect () {
-    return Promise.all([this.api, this.preferenceAdapter.all()])
-      .then(([url, prefs]) => {
-        const params = new URLParams()
-          .append('Email', prefs[PARAM_LOGIN])
-          .append('Passwd', prefs[PARAM_PASSWORD_API]);
-        
-        url = `${url}/accounts/ClientLogin?${params}`;
-        
-        return get.text(url)
-          .then(({text}) => {
-            const parsed = RssApi.qsAuth.parse(text);
-            
-            if (parsed && parsed.Auth) {
-              return this.auth = parsed.Auth;
-            }
-            
-            throw new Error(`AUTH_PARSING_FAILED, of text :\n${text}`);
-          })
-      });
+  async connect () {
+    const [url, prefs] = await Promise.all([this.api, this.preferenceAdapter.all()]);
+
+    const params = new URLParams()
+      .append('Email', prefs[PARAM_LOGIN])
+      .append('Passwd', prefs[PARAM_PASSWORD_API]);
+
+    const {text} = await get.text(`${url}/accounts/ClientLogin?${params}`);
+    const {Auth = void 0} = RssApi.qsAuth.parse(text);
+
+    if (!Auth) {
+      throw new Error(`AUTH_PARSING_FAILED, of text :\n${text}`);
+    }
+
+    return this.auth = Auth;
   }
   
   async getNbUnreads () {
@@ -246,7 +160,6 @@ class RssApi {
     const headers = this.authHeader;
     
     const url = `${base_url}${RssApi.SUBSCRIPTIONS_LIST}`;
-    console.log(url);
   
     const {json: {subscriptions}} = await get.json(url, {headers});
   
@@ -272,16 +185,20 @@ class RssApi {
     }
     
     const base_url = await this.api;
+    const headers = this.authHeader;
+
     const params = new URLParams()
       .append('output', 'json')
       .append('r', 'n')
       .append('n', nb)
       .append(...filter);
-    const headers = this.authHeader;
+
     const url = `${base_url}${RssApi.PART_CONTENT}?${params}`;
     
-    const [{json}, cache] = await Promise.all([get.json(url, {headers}), this.cacheSubscriptions()]);
-    console.log(cache);
+    const [{json}, cache] = await Promise.all([
+      get.json(url, {headers}),
+      this.cacheSubscriptions(),
+    ]);
     
     return json.items.map((item, index) => ({
       id: index + startIndex,
@@ -303,22 +220,19 @@ class RssApi {
     return text.trim();
   }
   
-  swapeState (itemid, isRead) {
-    return Promise.all([this.api, this.getToken()])
-      .then(([url, token]) => {
-        const params = new URLParams()
-          .append('i', `tag:google.com,2005:reader/item/${itemid}`)
-          .append('T', token)
-          .append(isRead ? 'r' : 'a', 'user/-/state/com.google/read');
-        const headers = this.authHeader;
-        url = `${url}${RssApi.PART_SWAP}`;
-        
-        return get.text(url, {
-          method: 'POST',
-          headers,
-          body: `${params}`
-        }).then(console.log);
-      })
+  async swapeState (itemid, isRead) {
+    const [url, token] = await Promise.all([this.api, this.getToken()]);
+
+    const params = new URLParams()
+      .append('i', `tag:google.com,2005:reader/item/${itemid}`)
+      .append('T', token)
+      .append(isRead ? 'r' : 'a', 'user/-/state/com.google/read');
+
+    return get.text(`${url}${RssApi.PART_SWAP}`, {
+      method: 'POST',
+      headers: this.authHeader,
+      body: params,
+    });
   }
 }
 

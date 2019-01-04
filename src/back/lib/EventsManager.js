@@ -2,7 +2,7 @@
  * Simple EventsManager
  *
  * you can
- * - addListener - need name and listener
+ * - on - need name and listener
  * - fire - need name and callback
  * - removeListener - need listener
  *
@@ -16,7 +16,7 @@ class EventsManager {
    * @memberOf EventsManager
    */
   constructor(debug = false) {
-    this._debug = debug;
+    this.debug = debug;
     this.clear();
   }
   
@@ -28,12 +28,12 @@ class EventsManager {
    * @returns {[string, Function]} listener - usefull for removeListener
    *
    * @example
-   * manager.addListener('is-ready', (name, data) => console.log(`${name} fired with data :`, data)) // data is {foo: 'bar'}
-   * manager.fire('is-ready', {foo: 'bar'})
+   * manager.on('is-ready', (data, name) => console.log(`${name} fired with data :`, data)) // data is {foo: 'bar'}
+   * manager.fire('is-ready', 'bar')
    *
    * @memberOf EventsManager
    */
-  addListener(name, listener) {
+  on(name, listener) {
     const dispatcher = this._getNameDispatcher(name);
     dispatcher.push(listener);
     
@@ -50,8 +50,11 @@ class EventsManager {
    */
   fire(name, ...args) {
     const dispatcher = this._getNameDispatcher(name);
-    
-    this._debug && (console.log(`event ${name} is fired with data :`, ...args) || console.trace());
+
+    if (this.debug) {
+      console.debug(`event ${name} is fired with data :`, ...args);
+      console.trace();
+    }
     
     dispatcher
       .filter(l => typeof l === 'function')
