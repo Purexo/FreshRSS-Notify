@@ -10,6 +10,7 @@ body {
 }
 
 .rss-item-container.container-fluid {
+    min-height: 100px;
     max-height: 541px;
     max-width: 600px;
     overflow-y: auto;

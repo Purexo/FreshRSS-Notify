@@ -37,7 +37,7 @@ function renewFromCache({rss, unreads, params}) {
   $rss_instance_links.on('click', event => {
     event.preventDefault();
 
-    browser.tabs.create({active: false, url: event.currentTarget.getAttribute('href')})
+    browser.tabs.create({active: true, url: event.currentTarget.getAttribute('href')})
       .catch(console.error)
   });
 
