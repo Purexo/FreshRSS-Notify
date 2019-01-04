@@ -32,7 +32,25 @@ function renewFromCache({rss, unreads, params}) {
   const $container = $('.rss-item-container');
   const $unreads = $('.js-nb-unreads');
   const $btn_refresh = $('.js-refresh');
-  const $rss_instance_link = $('.js-rss-instance-link');
+  const $rss_instance_links = $('.js-rss-instance-link');
+
+  $rss_instance_links.on('click', event => {
+    event.preventDefault();
+
+    browser.tabs.create({active: false, url: event.currentTarget.getAttribute('href')})
+      .catch(console.error)
+  });
+
+  $btn_refresh.on(
+    'click',
+    () => browser.runtime
+      .sendMessage({name: EVENT_REQUEST_RSS, runNow: true})
+      .catch(console.error)
+  );
+
+  $btn_refresh.find('a')
+    .attr('title', browser.i18n.getMessage(LOCALE_PANEL_BTN_REFRESH_TITLE));
+  $rss_instance_links.last().attr('title', browser.i18n.getMessage(LOCALE_PANEL_BTN_UNREADS_TITLE));
   
   manager.on(EVENT_OBTAIN_NBUNREADS, ({nbunreads}) => $unreads.text(nbunreads));
   manager.on(EVENT_OBTAIN_RSS, ({id, rss}) => {
@@ -50,7 +68,7 @@ function renewFromCache({rss, unreads, params}) {
     const $swap_icon = $rss_item.find('.js-swap .fa');
     const $body_collapser = $rss_item.find('.js-collapse');
     const $rss_body = $rss_item.find('.card-body');
-    const $collapse_icon = $('.js-collapse .fa');
+    const $collapse_icon = $rss_item.find('.js-collapse .fa');
 
     $body_collapser.on('click', event => $rss_body.collapse('toggle'));
 
@@ -118,21 +136,7 @@ function renewFromCache({rss, unreads, params}) {
 
   manager.on(
     EVENT_OBTAIN_PARAMS,
-    ({params}) => $rss_instance_link.attr('href', params[PARAM_URL_MAIN])
-  );
-
-  $rss_instance_link.on('click', event => {
-    event.preventDefault();
-
-    browser.tabs.create({active: false, url: event.currentTarget.getAttribute('href')})
-      .catch(console.error)
-  });
-
-  $btn_refresh.on(
-    'click',
-    () => browser.runtime
-      .sendMessage({name: EVENT_REQUEST_RSS, runNow: true})
-      .catch(console.error)
+    ({params}) => $rss_instance_links.attr('href', params[PARAM_URL_MAIN])
   );
   
   listenRuntimeMessage();

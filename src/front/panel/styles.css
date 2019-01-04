@@ -92,6 +92,11 @@ body {
     font-weight: bolder;
 }
 
+.rss-item a:hover {
+    text-decoration: none;
+    color: #bebebe;
+}
+
 .rss-item a:visited {
     color: grey;
 }

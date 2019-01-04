@@ -1,33 +1,33 @@
 {
   "NOTIFICATION_SERVER_CHECK_SUCCESS_TITLE": {
-    "message": "Success"
+    "message": "Succès"
   },
   "NOTIFICATION_SERVER_CHECK_SUCCESS_MESSAGE": {
-    "message": "Server responded correctly"
+    "message": "Le serveur à répondu correctement"
   },
   "NOTIFICATION_SERVER_CHECK_FAIL_TITLE": {
-    "message": "Fail"
+    "message": "Échec"
   },
   "NOTIFICATION_SERVER_CHECK_FAIL_MESSAGE": {
-    "message": "Server responded badly, check urls and your connection"
+    "message": "Le serveur à mal répondu, vérifier les url et votre connexion"
   },
   "NOTIFICATION_CREDENTIALS_CHECK_SUCCESS_TITLE": {
-    "message": "Success"
+    "message": "Succès"
   },
   "NOTIFICATION_CREDENTIALS_CHECK_SUCCESS_MESSAGE": {
-    "message": "Your are authenticated"
+    "message": "Vous êtes authentifié"
   },
   "NOTIFICATION_CREDENTIALS_CHECK_FAIL_TITLE": {
-    "message": "Fail"
+    "message": "Échec"
   },
   "NOTIFICATION_CREDENTIALS_CHECK_FAIL_MESSAGE": {
-    "message": "Check your login and API password"
+    "message": "Vérifiez votre identifiant et votre mot de passe API"
   },
   "NOTIFICATION_REFRESH_SUCCESS_TITLE": {
-    "message": "Unread"
+    "message": "Non-lus"
   },
   "NOTIFICATION_REFRESH_SUCCESS_MESSAGE": {
-    "message": "You have $NB$ unread(s) article(s)",
+    "message": "Vous avez $NB$ article(s) non-lu(s)",
     "placeholders": {
       "nb": {
         "content": "$1",
@@ -36,9 +36,9 @@
     }
   },
   "PANEL_BTN_REFRESH_TITLE": {
-    "message": "Refresh"
+    "message": "Rafraichir"
   },
   "PANEL_BTN_UNREADS_TITLE": {
-    "message": "Unreads"
+    "message": "Non-lus"
   }
 }

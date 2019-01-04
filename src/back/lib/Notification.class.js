@@ -37,36 +37,42 @@ class Notification {
   }
 
   /**
-   * @param {string?} title
-   * @param {string?} message
-   * @param {string?} iconUrl
+   * @param {String?} title
+   * @param {String|string[]?} title_substitutions
+   * @param {String?} message
+   * @param {String|string[]?} message_substitutions
+   * @param {String?} iconUrl
    */
-  create(title, message, iconUrl) {
-    this._create(title, message, iconUrl)
+  create({title, title_substitutions, message, message_substitutions, iconUrl}={}) {
+    this._create({title, title_substitutions, message, message_substitutions, iconUrl})
       .catch(console.error)
   }
 
-  async _create(title, message, iconUrl) {
+  async _create({
+                  title=this.default.title, message=this.default.message,
+                  title_substitutions, message_substitutions,
+                  iconUrl=this.default.iconUrl
+  }) {
     const params = await getParameters();
     
     if (!this._isAuthorized(params)) {
       return;
     }
-    
-    iconUrl = Notification.getURL(iconUrl);
-    const options = {type: 'basic'};
-    options.title = title || this.default.title;
-    options.message = message || this.default.message;
-    options.iconUrl = iconUrl || this.default.iconUrl;
-  
-    if (!options.title) {
+
+    if (!title) {
       requiredParam('Notification.prototype.create', 'title', 'no default value are setted');
     }
-    if (!options.message) {
+    if (!message) {
       requiredParam('Notification.prototype.create', 'message', 'no default value are setted');
     }
     
-    browser.notifications.create(this.notification_id, options);
+    iconUrl = Notification.getURL(iconUrl);
+    
+    return browser.notifications.create(this.notification_id, {
+      type: 'basic', iconUrl,
+      title: browser.i18n.getMessage(title, title_substitutions),
+      message: browser.i18n.getMessage(message, message_substitutions),
+    });
   }
   
   onClick() {
@@ -79,32 +85,40 @@ class Notification {
 const NOTIFICATIONS = {
   [NOTIFICATION_SERVER_CHECK_SUCCESS]: new Notification({
     notification_id: NOTIFICATION_SERVER_CHECK_SUCCESS,
-    title: 'Success',
-    message: 'Server responded correctly'
+    title: LOCALE_NOTIF_SERVER_CHECK_SUCCESS_TITLE,
+    message: LOCALE_NOTIF_SERVER_CHECK_SUCCESS_MESSAGE,
+    iconUrl: '/Assets/img/icon.png',
   }),
   [NOTIFICATION_SERVER_CHECK_FAIL]: new Notification({
     notification_id: NOTIFICATION_SERVER_CHECK_FAIL,
-    title: 'Fail',
-    message: 'Server responded badly, check urls and yout connection',
-    iconUrl: 'Assets/img/error.png'
+    title: LOCALE_NOTIF_SERVER_CHECK_FAIL_TITLE,
+    message: LOCALE_NOTIF_SERVER_CHECK_FAIL_MESSAGE,
+    iconUrl: '/Assets/img/error.png',
   }),
   [NOTIFICATION_CREDENTIALS_CHECK_SUCCESS]: new Notification({
     notification_id: NOTIFICATION_CREDENTIALS_CHECK_SUCCESS,
-    title: 'Success',
-    message: 'Your are correctly connected'
+    title: LOCALE_NOTIF_CREDENTIALS_CHECK_SUCCESS_TITLE,
+    message: LOCALE_NOTIF_CREDENTIALS_CHECK_SUCCESS_MESSAGE,
+    iconUrl: '/Assets/img/icon.png',
   }),
   [NOTIFICATION_CREDENTIALS_CHECK_FAIL]: new Notification({
     notification_id: NOTIFICATION_CREDENTIALS_CHECK_FAIL,
-    title: 'Fail',
-    message: 'Check your password api and login',
-    iconUrl: 'Assets/img/error.png'
+    title: LOCALE_NOTIF_CREDENTIALS_CHECK_FAIL_TITLE,
+    message: LOCALE_NOTIF_CREDENTIALS_CHECK_FAIL_MESSAGE,
+    iconUrl: '/Assets/img/error.png'
   }),
   [NOTIFICATION_REFRESH_SUCCESS]: new Notification({
     notification_id: NOTIFICATION_REFRESH_SUCCESS,
-    title: 'Success',
-    message: 'You have x unreads articles',
+    title: LOCALE_NOTIF_REFRESH_SUCCESS_TITLE,
+    message: LOCALE_NOTIF_REFRESH_SUCCESS_MESSAGE,
+    iconUrl: '/Assets/img/icon.png',
     isAuthorized(params) {
       return params[PARAM_ACTIVE_NOTIFICATIONS];
+    },
+    onClick() {
+      getParameters()
+        .then(params => params[PARAM_URL_MAIN])
+        .then(url => browser.tabs.create({active: true, url}));
     }
   })
 };

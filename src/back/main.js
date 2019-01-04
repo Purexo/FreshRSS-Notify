@@ -81,8 +81,10 @@ manager.on(EVENT_LOOP_AUTO_REFRESH, async () => {
   browser.browserAction.setBadgeText({text: `${nbunreads}`});
   browser.browserAction.setIcon({path: '/Assets/img/icon.png'}).catch(console.error);
   browser.browserAction.setBadgeBackgroundColor({
-    color: nbunreads > 0 ? (NOTIFICATIONS[NOTIFICATION_REFRESH_SUCCESS].create(), 'red') : 'green'
+    color: nbunreads > 0 ? 'red' : 'green'
   });
+
+  nbunreads > 0 && NOTIFICATIONS[NOTIFICATION_REFRESH_SUCCESS].create({message_substitutions: `${nbunreads}`})
 });
 
 manager.on(EVENT_REQUEST_RSS, ({runNow}) => {
