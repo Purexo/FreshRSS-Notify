@@ -2,3 +2,6 @@
 node_modules
 src/back/lib/from_npm/
 !src/back/lib/from_npm/.gitkeep
+
+web-ext-artifacts
+.web-extension-id
