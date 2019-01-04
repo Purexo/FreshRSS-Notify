@@ -15,6 +15,31 @@ body {
     overflow-y: auto;
 }
 
+.rss-item-container {
+    position: relative;
+}
+
+.rss-item-container::-webkit-scrollbar {
+    position: fixed;
+}
+
+.rss-item-container::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+.rss-item-container::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.rss-item-container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #D62929;
+}
+
 .fa {
     font-size: 1.5em;
 }
@@ -66,8 +91,13 @@ body {
     color: #a0a0a0;
     font-weight: bolder;
 }
+
 .rss-item a:visited {
     color: grey;
+}
+
+.rss-item .tpl-rss-title {
+    flex: 1;
 }
 
 .rss-item img {

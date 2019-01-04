@@ -48,8 +48,27 @@ function renewFromCache({rss, unreads, params}) {
       .css('order', rss.id);
     
     const $swap_icon = $rss_item.find('.js-swap .fa');
-    $swap_icon.addClass(rss.isRead ? 'fa-envelope-open-o' : 'fa-envelope-o');
-    $swap_icon.addClass(rss.isRead ? 'text-secondary' : 'text-danger');
+    const $body_collapser = $rss_item.find('.js-collapse');
+    const $rss_body = $rss_item.find('.card-body');
+    const $collapse_icon = $('.js-collapse .fa');
+
+    $body_collapser.on('click', event => $rss_body.collapse('toggle'));
+
+    $rss_body
+      .on('show.bs.collapse', event => {
+        $collapse_icon.removeClass('fa-arrow-down');
+        $collapse_icon.addClass('fa-arrow-up');
+      })
+      .on('hide.bs.collapse', event => {
+        $collapse_icon.removeClass('fa-arrow-up');
+        $collapse_icon.addClass('fa-arrow-down');
+      });
+
+    const classToAdd = rss.isRead
+      ? ['fa-envelope-open-o', 'text-secondary']
+      : ['fa-envelope-o', 'text-danger'];
+
+    classToAdd.forEach(cls => $swap_icon.addClass(cls));
     
     $rss_item.find('.tpl-rss-title')
       .on('click', event => {
@@ -92,11 +111,8 @@ function renewFromCache({rss, unreads, params}) {
         isRead: rss.isRead,
       }).catch(console.error);
 
-      $swap_icon
-        .toggleClass('fa-envelope-open-o')
-        .toggleClass('fa-envelope-o')
-        .toggleClass('text-secondary')
-        .toggleClass('text-danger')
+      ['fa-envelope-open-o', 'fa-envelope-o', 'text-secondary', 'text-danger']
+        .forEach(cls => $swap_icon.toggleClass(cls));
     })
   });
 
@@ -104,6 +120,13 @@ function renewFromCache({rss, unreads, params}) {
     EVENT_OBTAIN_PARAMS,
     ({params}) => $rss_instance_link.attr('href', params[PARAM_URL_MAIN])
   );
+
+  $rss_instance_link.on('click', event => {
+    event.preventDefault();
+
+    browser.tabs.create({active: false, url: event.currentTarget.getAttribute('href')})
+      .catch(console.error)
+  });
 
   $btn_refresh.on(
     'click',
