@@ -129,6 +129,18 @@ function renewFromCache({rss, unreads, params}) {
         isRead: rss.isRead,
       }).catch(console.error);
 
+      // update count
+      let count = Number($unreads.text());
+      count = count + (rss.isRead ? +1 : -1);
+      $unreads.text(count);
+
+      browser.browserAction.setBadgeText({text: `${count}`});
+      browser.browserAction.setBadgeBackgroundColor({
+        color: count > 0 ? 'red' : 'green'
+      });
+
+      rss.isRead = !rss.isRead;
+
       ['fa-envelope-open-o', 'fa-envelope-o', 'text-secondary', 'text-danger']
         .forEach(cls => $swap_icon.toggleClass(cls));
     })

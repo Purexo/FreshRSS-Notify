@@ -4,7 +4,7 @@
   "description": "// TODO ALL",
   "main": "index.js",
   "scripts": {
-    "start": "web-ext run --firefox-profile FreshRSS --keep-profile-changes --start-url about:debugging",
+    "start": "web-ext run --firefox-profile FreshRSS --keep-profile-changes --start-url about:debugging --verbose",
     "build": "web-ext sign",
     "fetch-deps": "node npm_scripts/fetch_dependencies.js",
     "postinstall": "echo npm run fetch-deps",
