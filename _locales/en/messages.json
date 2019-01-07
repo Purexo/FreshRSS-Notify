@@ -40,5 +40,89 @@
   },
   "PANEL_BTN_UNREADS_TITLE": {
     "message": "Unreads"
+  },
+  "OPTION_HEAD_TITLE": {
+    "message": "FreshRSS-Notify - Options"
+  },
+  "OPTION_TITLE": {
+    "message": "Options"
+  },
+  "OPTION_SERVER_SETTINGS_TITLE": {
+    "message": "Server Settings"
+  },
+  "OPTION_SERVER_SETTINGS_URL_LABEL": {
+    "message": "URL: "
+  },
+  "OPTION_SERVER_SETTINGS_URL_PLACEHOLDER": {
+    "message": "Enter URL"
+  },
+  "OPTION_SERVER_SETTINGS_URL_HELP_TEXT": {
+    "message": "Adress of your FreshRSS instance."
+  },
+  "OPTION_SERVER_SETTINGS_API_URL_LABEL": {
+    "message": "API URL: "
+  },
+  "OPTION_SERVER_SETTINGS_API_URL_PLACEHOLDER": {
+    "message": "Enter URL"
+  },
+  "OPTION_SERVER_SETTINGS_API_URL_HELP_TEXT": {
+    "message": "Full URL of API part of your FreshRSS instance (not the relative path)"
+  },
+  "OPTION_SERVER_SETTINGS_BTN_CHECK": {
+    "message": "Check server"
+  },
+  "OPTION_AUTH_SETTINGS_TITLE": {
+    "message": "Authentication Settings"
+  },
+  "OPTION_AUTH_SETTINGS_LOGIN_LABEL": {
+    "message": "Login: "
+  },
+  "OPTION_AUTH_SETTINGS_LOGIN_PLACEHOLDER": {
+    "message": "Enter Login"
+  },
+  "OPTION_AUTH_SETTINGS_LOGIN_HELP_TEXT": {
+    "message": "Your login / username"
+  },
+  "OPTION_AUTH_SETTINGS_PASSWORD_LABEL": {
+    "message": "API Password: "
+  },
+  "OPTION_AUTH_SETTINGS_PASSWORD_PLACEHOLDER": {
+    "message": "Enter Password"
+  },
+  "OPTION_AUTH_SETTINGS_PASSWORD_HELP_TEXT": {
+    "message": "/!\\ It's not your password account! You should define it (profile section in your FreshRSS account settings)."
+  },
+  "OPTION_AUTH_SETTINGS_BTN_CHECK": {
+    "message": "Check credentials"
+  },
+  "OPTION_NOTIF_SETTINGS_TITLE": {
+    "message": "Notifications Settings"
+  },
+  "OPTION_NOTIF_SETTINGS_UPDATE_DELAY_LABEL": {
+    "message": "Update time: "
+  },
+  "OPTION_NOTIF_SETTINGS_UPDATE_DELAY_INDICATOR": {
+    "message": "$NB$ min",
+    "placeholders": {
+      "nb": {
+        "content": "$1",
+        "example": "15"
+      }
+    }
+  },
+  "OPTION_NOTIF_SETTINGS_UPDATE_DELAY_HELP_TEXT": {
+    "message": "In minutes"
+  },
+  "OPTION_NOTIF_SETTINGS_IS_ACTIVATE_LABEL": {
+    "message": "Display unreads notifications: "
+  },
+  "OPTION_NOTIF_SETTINGS_IS_ACTIVATE_HELP_TEXT": {
+    "message": "Uncheck to disable notifications"
+  },
+  "OPTION_NOTIF_SETTINGS_FEEDS_LIMIT_LABEL": {
+    "message": "Number of feeds to display: "
+  },
+  "OPTION_NOTIF_SETTINGS_FEEDS_LIMIT_HELP_TEXT": {
+    "message": "Number of feeds to display in panel (1 to 10, 5 by default)"
   }
 }

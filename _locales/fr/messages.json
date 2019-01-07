@@ -40,5 +40,89 @@
   },
   "PANEL_BTN_UNREADS_TITLE": {
     "message": "Non-lus"
+  },
+  "OPTION_HEAD_TITLE": {
+    "message": "FreshRSS-Notify - Options"
+  },
+  "OPTION_TITLE": {
+    "message": "Options"
+  },
+  "OPTION_SERVER_SETTINGS_TITLE": {
+    "message": "Configuration Serveur"
+  },
+  "OPTION_SERVER_SETTINGS_URL_LABEL": {
+    "message": "URL : "
+  },
+  "OPTION_SERVER_SETTINGS_URL_PLACEHOLDER": {
+    "message": "Saisissez l'URL"
+  },
+  "OPTION_SERVER_SETTINGS_URL_HELP_TEXT": {
+    "message": "Adresse de votre instance FreshRSS."
+  },
+  "OPTION_SERVER_SETTINGS_API_URL_LABEL": {
+    "message": "API URL : "
+  },
+  "OPTION_SERVER_SETTINGS_API_URL_PLACEHOLDER": {
+    "message": "Saisissez l'URL"
+  },
+  "OPTION_SERVER_SETTINGS_API_URL_HELP_TEXT": {
+    "message": "URL complète pour accéder à l'API de votre instance FreshRSS (pas le chemin relatif)"
+  },
+  "OPTION_SERVER_SETTINGS_BTN_CHECK": {
+    "message": "Tester le serveur"
+  },
+  "OPTION_AUTH_SETTINGS_TITLE": {
+    "message": "Configuration de l'authentification"
+  },
+  "OPTION_AUTH_SETTINGS_LOGIN_LABEL": {
+    "message": "Identifiant : "
+  },
+  "OPTION_AUTH_SETTINGS_LOGIN_PLACEHOLDER": {
+    "message": "Saisissez votre identifiant"
+  },
+  "OPTION_AUTH_SETTINGS_LOGIN_HELP_TEXT": {
+    "message": "Votre identifiant / nom d'utilisateur"
+  },
+  "OPTION_AUTH_SETTINGS_PASSWORD_LABEL": {
+    "message": "Mot de passe API : "
+  },
+  "OPTION_AUTH_SETTINGS_PASSWORD_PLACEHOLDER": {
+    "message": "Saisissez votre mot de passe"
+  },
+  "OPTION_AUTH_SETTINGS_PASSWORD_HELP_TEXT": {
+    "message": "/!\\ Ce n'est pas le mot de passe de votre compte ! Vous devez le définir (section profile dans la configuration compte de votre instance FreshRSS)."
+  },
+  "OPTION_AUTH_SETTINGS_BTN_CHECK": {
+    "message": "Tester l'authentification"
+  },
+  "OPTION_NOTIF_SETTINGS_TITLE": {
+    "message": "Configuration des notifications"
+  },
+  "OPTION_NOTIF_SETTINGS_UPDATE_DELAY_LABEL": {
+    "message": "Délai de mise à jours des fluxs : "
+  },
+  "OPTION_NOTIF_SETTINGS_UPDATE_DELAY_INDICATOR": {
+    "message": "$NB$ min",
+    "placeholders": {
+      "nb": {
+        "content": "$1",
+        "example": "15"
+      }
+    }
+  },
+  "OPTION_NOTIF_SETTINGS_UPDATE_DELAY_HELP_TEXT": {
+    "message": "En minutes"
+  },
+  "OPTION_NOTIF_SETTINGS_IS_ACTIVATE_LABEL": {
+    "message": "Afficher les notifications de non-lus : "
+  },
+  "OPTION_NOTIF_SETTINGS_IS_ACTIVATE_HELP_TEXT": {
+    "message": "Décocher pour désactiver les notifications"
+  },
+  "OPTION_NOTIF_SETTINGS_FEEDS_LIMIT_LABEL": {
+    "message": "Nombre de flux à afficher : "
+  },
+  "OPTION_NOTIF_SETTINGS_FEEDS_LIMIT_HELP_TEXT": {
+    "message": "Nombre de flux à afficher dans le panneau (1 à 10, 5 par défaut)"
   }
 }

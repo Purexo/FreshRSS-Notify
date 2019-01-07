@@ -14,6 +14,24 @@ $(function $_on_ready_handler() {
   
   /* --- Gestion generic des inputs du form --- */
   const $form = $('form');
+
+  /* --- locale loading --- */
+  document.querySelectorAll('[data-locale-id]').forEach(element => {
+    const localeId = element.getAttribute('data-locale-id');
+    const substitutions = element.hasAttribute('data-locale-substitutions')
+      ? element.getAttribute('data-locale-substitutions')
+      : void 0;
+
+    const message = browser.i18n.getMessage(localeId, substitutions);
+
+    if (element.hasAttribute('data-locale-attribute')) {
+      const attribute = element.getAttribute('data-locale-attribute');
+
+      element.setAttribute(attribute, message);
+    } else {
+      element.textContent = message;
+    }
+  });
   
   $form.on('change', '.js-should-end-by-slash', /** @this {HTMLInputElement}*/ function $form_js_should_end_by_slash_on_change(event) {
     if (!this.value.endsWith('/')) {
@@ -36,7 +54,12 @@ $(function $_on_ready_handler() {
   // mise à jours de l'indicateur
   $input_refresh_time.on('input keyup change', function $refresh_time_on_change() {
     this.setAttribute('value', this.value);
-    $input_refresh_time_detail.text(`${this.value} min`);
+    $input_refresh_time_detail.text(
+      browser.i18n.getMessage(
+        $input_refresh_time_detail.attr('data-locale-id'),
+        `${this.value}`
+      )
+    );
   });
   // et fire EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE
   $input_refresh_time.on('change', /** @this {HTMLInputElement}*/ function $refresh_time_on_just_change() {
