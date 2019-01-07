@@ -1,6 +1,6 @@
 {
   "name": "freshrss-notify",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Alert new unreads feeds",
   "main": "index.js",
   "scripts": {
