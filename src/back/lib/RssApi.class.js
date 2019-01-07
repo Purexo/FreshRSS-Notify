@@ -196,7 +196,7 @@ class RssApi {
     const url = `${base_url}${RssApi.PART_CONTENT}?${params}`;
     
     const [{json}, cache] = await Promise.all([
-      get.json(url, {headers}),
+      get.json(url, {headers}).catch(() => ({json: {items: []}})),
       this.cacheSubscriptions(),
     ]);
     
