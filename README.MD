@@ -22,5 +22,5 @@ Prerequisites :
 - Get your [API Credentials](https://addons.mozilla.org/en-US/developers/addon/api/key/)
 
 ```bash
-npm run build -- -api-key YOUR_API_KEY --api-secret YOUR_API_SECRET
+npm run dev-deploy -- --api-key YOUR_API_KEY --api-secret YOUR_API_SECRET
 ```

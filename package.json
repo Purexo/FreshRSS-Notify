@@ -1,11 +1,12 @@
 {
   "name": "freshrss-notify",
-  "version": "1.0.0",
-  "description": "// TODO ALL",
+  "version": "3.0.2",
+  "description": "Alert new unreads feeds",
   "main": "index.js",
   "scripts": {
     "start": "web-ext run --firefox-profile FreshRSS --keep-profile-changes --start-url about:debugging --verbose",
-    "dev-deploy": "web-ext sign",
+    "dev-deploy": "web-ext sign --id freshrss-notify-dev@purexo.mom",
+    "deploy": "web-ext sign --id freshrss-notify@purexo.mom",
     "build": "web-ext build"
   },
   "repository": {
