@@ -183,6 +183,14 @@ class RssApi {
     if (nb === void 0) {
       throw new Error('No Stream Content to fetch, nb = undefined');
     }
+
+    // if no feed to fetch, return an empty array instead request api
+    // api have unexpected behavior in this case
+    // respond very slowy, depend on version return empty response or very big response
+    // in two case, unparsable (empty is not JSON valid, big response is truncate)
+    if (nb === 0) {
+      return []
+    }
     
     const base_url = await this.api;
     const headers = this.authHeader;

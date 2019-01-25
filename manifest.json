@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "FreshRSS-Notify",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "default_locale": "en",
   "author": "Purexo",
   "homepage_url": "https://github.com/Purexo/FreshRSS-Notify",
