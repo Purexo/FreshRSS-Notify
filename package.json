@@ -1,12 +1,12 @@
 {
   "name": "freshrss-notify",
-  "version": "3.0.3",
+  "version": "3.0.5",
   "description": "Alert new unreads feeds",
   "main": "index.js",
   "scripts": {
     "start": "web-ext run --firefox-profile FreshRSS --keep-profile-changes --start-url about:debugging --verbose",
-    "dev-deploy": "web-ext sign --id freshrss-notify-dev@purexo.mom",
-    "deploy": "web-ext sign --id freshrss-notify@purexo.mom",
+    "dev-deploy": "web-ext sign --id freshrss-notify-dev@purexo.mom --ignore-files '**/*.map'",
+    "deploy": "web-ext sign --id freshrss-notify@purexo.mom --ignore-files '**/*.map'",
     "build": "web-ext build"
   },
   "repository": {
@@ -20,8 +20,8 @@
   },
   "homepage": "https://github.com/Purexo/FreshRSS-Notify#readme",
   "devDependencies": {
-    "@types/jquery": "^3.3.29",
-    "web-ext": "^2.9.3",
+    "@types/jquery": "^3.3.30",
+    "web-ext": "^3.1.0",
     "web-ext-types": "^3.1.0"
   },
   "dependencies": {}
