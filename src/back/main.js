@@ -84,7 +84,7 @@ manager.on(EVENT_LOOP_AUTO_REFRESH, async () => {
     color: nbunreads > 0 ? 'red' : 'green'
   });
 
-  nbunreads > 0 && NOTIFICATIONS[NOTIFICATION_REFRESH_SUCCESS].create({message_substitutions: `${nbunreads}`})
+  return nbunreads > 0 && NOTIFICATIONS[NOTIFICATION_REFRESH_SUCCESS].create({message_substitutions: `${nbunreads}`})
 });
 
 manager.on(EVENT_REQUEST_RSS, ({runNow}) => {
