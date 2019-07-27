@@ -1,3 +1,7 @@
+document.body.parentElement.classList.add((typeof InstallTrigger !== 'undefined')? 'isFirefox' : 'isNotFirefox');
+
+
+
 let background;
 const manager = new EventsManager();
 

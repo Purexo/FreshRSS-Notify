@@ -9,6 +9,14 @@ body {
     font-size: 0.75rem;
 }
 
+html.isNotFirefox, html.isNotFirefox body {
+    max-height: 600px;
+    min-width: 600px;
+}
+html.isNotFirefox .rss-item-container.container-fluid {
+    max-height: 535px;
+}
+
 .rss-item-container.container-fluid {
     min-height: 100px;
     max-height: 541px;
