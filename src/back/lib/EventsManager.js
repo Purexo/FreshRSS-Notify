@@ -58,7 +58,7 @@ class EventsManager {
     
     dispatcher
       .filter(l => typeof l === 'function')
-      .forEach(listener => listener(...args, name));
+      .forEach(listener => Promise.resolve(listener(...args, name)).catch(console.error));
   }
   
   /**

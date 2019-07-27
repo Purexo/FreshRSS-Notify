@@ -31,11 +31,5 @@
   "options_ui": {
     "page": "src/front/options/index.html",
     "open_in_tab": true
-  },
-
-  "applications": {
-    "gecko": {
-
-    }
   }
 }

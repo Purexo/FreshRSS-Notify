@@ -156,5 +156,7 @@ function renewFromCache({rss, unreads, params}) {
   );
   
   listenRuntimeMessage();
+  
+  background.cache.params = undefined;
   renewFromCache(background.cache);
 })();
