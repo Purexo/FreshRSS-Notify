@@ -1,0 +1,11 @@
+[
+    {
+        "op": "add",
+        "path": "/browser_specific_settings",
+        "value": {
+            "gecko": {
+                "id": "freshrss-notify-dev@purexo.mom"
+            }
+        }
+    }
+]

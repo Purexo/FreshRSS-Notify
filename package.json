@@ -4,10 +4,21 @@
   "description": "Alert new unreads feeds",
   "main": "index.js",
   "scripts": {
-    "start": "web-ext run --firefox-profile FreshRSS --keep-profile-changes --start-url about:debugging --verbose",
-    "dev-deploy": "web-ext sign --id freshrss-notify-dev@purexo.mom --ignore-files '**/*.map'",
-    "deploy": "web-ext sign --id freshrss-notify@purexo.mom --ignore-files '**/*.map'",
-    "build": "web-ext build"
+    "start": "npm run start:firefox",
+    "prestart:firefox": "node dev-tools/patch-manifest.js manifests/dev-firefox-manifest.patch.json",
+    "start:firefox": "web-ext run --firefox-profile FreshRSS --keep-profile-changes --start-url about:debugging --verbose",
+    "start:chrome": "TODO",
+
+    "deploy": "npm run deploy:firefox",
+    "deploy-dev": "npm run deploy:firefox:dev",
+    "predeploy:firefox": "node dev-tools/patch-manifest.js manifests/firefox-manifest.patch.json",
+    "deploy:firefox": "web-ext sign --id freshrss-notify@purexo.mom",
+    "predeploy:firefox:dev": "node dev-tools/patch-manifest.js manifests/dev-firefox-manifest.patch.json",
+    "deploy:firefox:dev": "web-ext sign --id freshrss-notify-dev@purexo.mom",
+
+    "build": "npm run build:firefox",
+    "prebuild:firefox:prod": "node dev-tools/patch-manifest.js manifests/firefox-manifest.patch.json",
+    "build:firefox:prod": "web-ext build"
   },
   "repository": {
     "type": "git",
@@ -21,7 +32,8 @@
   "homepage": "https://github.com/Purexo/FreshRSS-Notify#readme",
   "devDependencies": {
     "@types/jquery": "^3.3.30",
-    "web-ext": "^3.1.0",
+    "jiff": "^0.7.3",
+    "web-ext": "^3.1.1",
     "web-ext-types": "^3.1.0"
   },
   "dependencies": {},
