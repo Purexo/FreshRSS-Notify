@@ -5,3 +5,5 @@ src/back/lib/from_npm/
 
 web-ext-artifacts
 .web-extension-id
+
+manifest.json
