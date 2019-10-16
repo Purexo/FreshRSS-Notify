@@ -7,5 +7,10 @@
                 "id": "freshrss-notify-dev@purexo.mom"
             }
         }
+    },
+    {
+        "op": "replace",
+        "path": "/name",
+        "value": "FreshRSS-Notify Dev"
     }
 ]

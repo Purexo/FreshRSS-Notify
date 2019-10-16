@@ -7,7 +7,7 @@ This v3 is a port of the v2 in WebExtension, design change a bit, but functional
 ## Develop
 
 - Open Firefox and goto [about:profiles](about:profiles)
-- Create a new profile named FreshRSS
+- Create a new profile named `FreshRSS`
 - `npm start`
 
 ## Install

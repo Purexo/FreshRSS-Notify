@@ -1,6 +1,7 @@
 const {promises: fs} = require('fs');
 const path = require('path');
 const jiff = require('jiff');
+const pkg = require('../package');
 
 const MANIFEST = path.join('./manifest.json');
 const BASE = path.join('./manifests/base-manifest.json');
@@ -11,6 +12,12 @@ async function main() {
     fs.readFile(BASE),
     fs.readFile(PATCH)
   ].map(p => p.then(c => JSON.parse(c.toString()))));
+  
+  patch.push({
+    op: "add",
+    path: "version",
+    value: pkg.version,
+  });
   
   const manifest = jiff.patchInPlace(patch, base);
 
