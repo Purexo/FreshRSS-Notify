@@ -21,8 +21,6 @@ class Notification {
   }) {
     this.notification_id = notification_id;
     
-    iconUrl = Notification.getURL(iconUrl);
-    
     this.default = {title, message, iconUrl};
     this._onClick = onClick;
     this._isAuthorized = isAuthorized;
@@ -30,7 +28,7 @@ class Notification {
   
   static getURL(iconPath) {
     if (iconPath) {
-      iconPath = browser.extension.getURL(iconPath);
+      iconPath = browser.runtime.getURL(iconPath);
     }
     
     return iconPath;
