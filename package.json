@@ -2,21 +2,23 @@
   "name": "freshrss-notify",
   "version": "3.0.5",
   "description": "Alert new unreads feeds",
+  "private": true,
   "scripts": {
     "start": "npm run start:firefox",
-    "prestart:firefox": "node dev-tools/patch-manifest.js manifests/dev-firefox-manifest.patch.json",
+    "prestart:firefox": "node scripts/patch-manifest.js src/manifests/dev-firefox-manifest.patch.json",
     "start:firefox": "web-ext run --firefox-profile FreshRSS --keep-profile-changes --start-url about:debugging --verbose",
-    "prestart:chrome": "node dev-tools/patch-manifest.js manifests/chrome-manifest.patch.json",
+    "prestart:chrome": "node scripts/patch-manifest.js src/manifests/chrome-manifest.patch.json",
     "start:chrome": "start chrome --profile-directory=FreshRSS --load-extension=%CD% chrome://extensions/",
     "deploy": "npm run deploy:firefox",
     "deploy-dev": "npm run deploy:firefox:dev",
-    "predeploy:firefox": "node dev-tools/patch-manifest.js manifests/firefox-manifest.patch.json",
+    "predeploy:firefox": "node scripts/patch-manifest.js src/manifests/firefox-manifest.patch.json",
     "deploy:firefox": "web-ext sign --id freshrss-notify@purexo.mom",
-    "predeploy:firefox:dev": "node dev-tools/patch-manifest.js manifests/dev-firefox-manifest.patch.json",
+    "predeploy:firefox:dev": "node scripts/patch-manifest.js src/manifests/dev-firefox-manifest.patch.json",
     "deploy:firefox:dev": "web-ext sign --id freshrss-notify-dev@purexo.mom",
     "build": "npm run build:firefox:prod",
-    "prebuild:firefox:prod": "node dev-tools/patch-manifest.js manifests/firefox-manifest.patch.json",
-    "build:firefox:prod": "web-ext build"
+    "prebuild:firefox:prod": "node scripts/patch-manifest.js src/manifests/firefox-manifest.patch.json",
+    "build:firefox:prod": "web-ext build",
+    "webpack:firefox": "webpack --env.patch=src/manifests/dev-firefox-manifest.patch.json"
   },
   "repository": {
     "type": "git",
@@ -33,9 +35,13 @@
   "homepage": "https://github.com/Purexo/FreshRSS-Notify#readme",
   "devDependencies": {
     "@types/jquery": "^3.3.30",
+    "@types/webpack": "^4.39.3",
     "jiff": "^0.7.3",
     "web-ext": "^3.2.0",
-    "web-ext-types": "^3.2.1"
+    "web-ext-types": "^3.2.1",
+    "webextension-polyfill": "^0.5.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9"
   },
   "dependencies": {},
   "webExt": {

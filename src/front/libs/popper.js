@@ -1903,7 +1903,7 @@ var modifiers = {
    * @inner
    */
   shift: {
-    /** @prop {number} order=100 - Index used to define the order of execution */
+    /** @prop {number} order=100 - FreshRSSApi used to define the order of execution */
     order: 100,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
@@ -1950,7 +1950,7 @@ var modifiers = {
    * @inner
    */
   offset: {
-    /** @prop {number} order=200 - Index used to define the order of execution */
+    /** @prop {number} order=200 - FreshRSSApi used to define the order of execution */
     order: 200,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
@@ -1980,7 +1980,7 @@ var modifiers = {
    * @inner
    */
   preventOverflow: {
-    /** @prop {number} order=300 - Index used to define the order of execution */
+    /** @prop {number} order=300 - FreshRSSApi used to define the order of execution */
     order: 300,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
@@ -2017,7 +2017,7 @@ var modifiers = {
    * @inner
    */
   keepTogether: {
-    /** @prop {number} order=400 - Index used to define the order of execution */
+    /** @prop {number} order=400 - FreshRSSApi used to define the order of execution */
     order: 400,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
@@ -2036,7 +2036,7 @@ var modifiers = {
    * @inner
    */
   arrow: {
-    /** @prop {number} order=500 - Index used to define the order of execution */
+    /** @prop {number} order=500 - FreshRSSApi used to define the order of execution */
     order: 500,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
@@ -2058,7 +2058,7 @@ var modifiers = {
    * @inner
    */
   flip: {
-    /** @prop {number} order=600 - Index used to define the order of execution */
+    /** @prop {number} order=600 - FreshRSSApi used to define the order of execution */
     order: 600,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
@@ -2093,7 +2093,7 @@ var modifiers = {
    * @inner
    */
   inner: {
-    /** @prop {number} order=700 - Index used to define the order of execution */
+    /** @prop {number} order=700 - FreshRSSApi used to define the order of execution */
     order: 700,
     /** @prop {Boolean} enabled=false - Whether the modifier is enabled or not */
     enabled: false,
@@ -2112,7 +2112,7 @@ var modifiers = {
    * @inner
    */
   hide: {
-    /** @prop {number} order=800 - Index used to define the order of execution */
+    /** @prop {number} order=800 - FreshRSSApi used to define the order of execution */
     order: 800,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
@@ -2136,7 +2136,7 @@ var modifiers = {
    * @inner
    */
   computeStyle: {
-    /** @prop {number} order=850 - Index used to define the order of execution */
+    /** @prop {number} order=850 - FreshRSSApi used to define the order of execution */
     order: 850,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,
@@ -2178,7 +2178,7 @@ var modifiers = {
    * @inner
    */
   applyStyle: {
-    /** @prop {number} order=900 - Index used to define the order of execution */
+    /** @prop {number} order=900 - FreshRSSApi used to define the order of execution */
     order: 900,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,

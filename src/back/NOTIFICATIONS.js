@@ -1,6 +1,4 @@
-function requiredParam(method, param, message) {
-  throw new TypeError(`${method} required ${param} parameter${message ? ` - ${message}` : ''}`)
-}
+import {getParameters, requiredParam} from "./functions";
 
 class Notification {
   /**
@@ -58,13 +56,13 @@ class Notification {
     }
 
     if (!title) {
-      requiredParam('Notification.prototype.create', 'title', 'no default value are setted');
+      requiredParam('NOTIFICATIONS.prototype.create', 'title', 'no default value are setted');
     }
     if (!message) {
-      requiredParam('Notification.prototype.create', 'message', 'no default value are setted');
+      requiredParam('NOTIFICATIONS.prototype.create', 'message', 'no default value are setted');
     }
     
-    iconUrl = Notification.getURL(iconUrl);
+    iconUrl = NOTIFICATIONS.getURL(iconUrl);
     
     return browser.notifications.create(this.notification_id, {
       type: 'basic', iconUrl,
@@ -128,3 +126,5 @@ browser.notifications.onClicked.addListener(notification_id => {
   
   NOTIFICATIONS[notification_id].onClick();
 });
+
+export default NOTIFICATIONS;

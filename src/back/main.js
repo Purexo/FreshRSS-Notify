@@ -1,3 +1,13 @@
+import browser from 'webextension-polyfill';
+
+import EventsManager from '../both/EventsManager';
+import * as get from './fetch';
+import FreshRSSApi from "./FreshRSSApi";
+import {clamp, getAutoRefreshTime, getParameters, saveInStorage, syncParameters} from "./functions";
+
+import cache from "./cache";
+import NOTIFICATIONS from "./NOTIFICATIONS";
+
 const manager = new EventsManager(true);
 
 function resetAutoRefreshAlarm(runNow = true) {
@@ -11,12 +21,7 @@ function resetAutoRefreshAlarm(runNow = true) {
   runNow && manager.fire(EVENT_LOOP_AUTO_REFRESH);
 }
 
-const API = new RssApi();
-cache = {
-  rss: undefined,
-  unreads: undefined,
-  params: undefined
-};
+const API = new FreshRSSApi();
 
 /**
  * simple routing alarm
@@ -65,12 +70,11 @@ manager.on(EVENT_LOOP_AUTO_REFRESH, async () => {
     API.getStreamsContent({
       nb: readToFetch,
       startIndex: unreadToFetch,
-      filter: ['xt', 'user/-/state/com.google/unread'],
-      isRead: true
+      filter: FreshRSSApi.EXCLUDE_UNREAD,
+      isRead: true,
     })
   ]);
-
-  cache.rss = cache.rss || new Map();
+  
   cache.rss.clear();
   articles.reduce((res, arr) => res.concat(arr), [])
     .forEach(rss => {

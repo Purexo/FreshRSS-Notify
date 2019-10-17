@@ -4,6 +4,7 @@ src/back/lib/from_npm/
 !src/back/lib/from_npm/.gitkeep
 
 web-ext-artifacts
+/extension
 .web-extension-id
 
 manifest.json

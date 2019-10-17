@@ -2,21 +2,21 @@
  * Created by Purexo on 07/05/2017.
  */
 
-function getAutoRefreshTime () {
+export function getAutoRefreshTime () {
   return browser.storage.local.get(PARAM_REFRESH_TIME)
     .then(param => param[PARAM_REFRESH_TIME] || DEFAULT_PARAMS[PARAM_REFRESH_TIME]);
 }
 
-function saveInStorage (params) {
+export function saveInStorage (params) {
   browser.storage.local.set(params);
   browser.storage.sync.set(params);
 }
 
-function shouldSaveParams (checkedParams, oldParams) {
+export function shouldSaveParams (checkedParams, oldParams) {
   let persist = false;
   
   for (let name of STORAGE_GET_ALL_PARAMS) {
-    if (checkedParams[name] != oldParams[name]) {
+    if (checkedParams[name] !== oldParams[name]) {
       persist = true;
       break;
     }
@@ -25,7 +25,7 @@ function shouldSaveParams (checkedParams, oldParams) {
   return persist;
 }
 
-function normalyzeParams (params) {
+export function normalyzeParams (params) {
   const checkedParams = Object.assign({}, DEFAULT_PARAMS, params);
   
   if (shouldSaveParams(checkedParams, params)) {
@@ -35,7 +35,7 @@ function normalyzeParams (params) {
   return checkedParams;
 }
 
-function syncParameters() {
+export function syncParameters() {
   return Promise.all([
       browser.storage.local.get(STORAGE_GET_ALL_PARAMS),
       browser.storage.sync.get(STORAGE_GET_ALL_PARAMS)
@@ -64,34 +64,23 @@ function syncParameters() {
     });
 }
 
-function getParameters() {
+export function getParameters() {
   return browser.storage.local.get(STORAGE_GET_ALL_PARAMS)
     .then(normalyzeParams);
 }
 
-function clamp(value, min, max) {
+export function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function PromiseWaitAll(...promises) {
-  return new Promise(function (resolve, reject) {
-    let count = promises.length;
-    const results = new Array(count);
-    
-    for (let [index, promise] of promises.entries()) {
-      let handler = data => {
-        results[index] = data;
-        if (--count == 0) {
-          resolve(results);
-        }
-      };
-      
-      if (promise instanceof Promise) {
-        promise.then(handler);
-        promise.catch(handler);
-      } else {
-        handler(promise);
-      }
-    }
-  });
+export function PromiseAllSettled(...promises) {
+  return Promise.all(promises.map(
+    p => p
+      .then(value => ({status: 'fulfilled', value}))
+      .catch(reason => ({status: 'rejected', reason}))
+  ));
+}
+
+export function requiredParam(method, param, message) {
+  throw new TypeError(`${method} required ${param} parameter${message ? ` - ${message}` : ''}`)
 }

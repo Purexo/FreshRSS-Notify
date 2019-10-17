@@ -8,7 +8,7 @@
  *
  * @class EventsManager
  */
-class EventsManager {
+export default class EventsManager {
   /**
    * Creates an instance of EventsManager.
    * @param {boolean} debug
