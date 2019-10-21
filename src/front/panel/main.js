@@ -1,6 +1,20 @@
-document.body.parentElement.classList.add((typeof InstallTrigger !== 'undefined')? 'isFirefox' : 'isNotFirefox');
+import browser from 'webextension-polyfill';
 
+import $ from 'jquery';
+import 'bootstrap';
 
+import './index.html';
+import './styles.css';
+
+import EventsManager from "../../both/EventsManager";
+import {
+  EVENT_OBTAIN_NBUNREADS, EVENT_OBTAIN_PARAMS,
+  EVENT_OBTAIN_RSS,
+  EVENT_REQUEST_NBUNREADS, EVENT_REQUEST_PARAMS,
+  EVENT_REQUEST_RSS, EVENT_REQUEST_SWAP, LOCALE_PANEL_BTN_REFRESH_TITLE, LOCALE_PANEL_BTN_UNREADS_TITLE, PARAM_URL_MAIN
+} from "../../both/constants";
+
+document.body.parentElement.classList.add((typeof InstallTrigger !== 'undefined') ? 'isFirefox' : 'isNotFirefox');
 
 let background;
 const manager = new EventsManager();

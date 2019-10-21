@@ -1,3 +1,16 @@
+import browser from 'webextension-polyfill';
+
+import $ from 'jquery';
+import 'bootstrap';
+
+import './index.html';
+
+import {
+  EVENT_INPUT_OPTION_CHANGE, EVENT_INPUT_OPTION_CREDENTIALS_CHECK,
+  EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE,
+  EVENT_INPUT_OPTION_SERVER_CHECK, EVENT_OBTAIN_PARAMS, EVENT_REQUEST_PARAMS, PARAM_URL_API, PARAM_URL_MAIN
+} from "../../both/constants";
+
 $(function $_on_ready_handler() {
   /**
    * Take an element and return his name and value

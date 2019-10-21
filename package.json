@@ -36,12 +36,21 @@
   "devDependencies": {
     "@types/jquery": "^3.3.30",
     "@types/webpack": "^4.39.3",
+    "css-loader": "^3.2.0",
+    "html-loader": "^0.5.5",
     "jiff": "^0.7.3",
+    "style-loader": "^1.0.0",
     "web-ext": "^3.2.0",
     "web-ext-types": "^3.2.1",
     "webextension-polyfill": "^0.5.0",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9"
+    "webpack-cli": "^3.3.9",
+    "bootstrap": "^4.3.1",
+    "dompurify": "^2.0.6",
+    "file-loader": "^4.2.0",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.16.0"
   },
   "dependencies": {},
   "webExt": {

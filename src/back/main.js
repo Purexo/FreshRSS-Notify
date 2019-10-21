@@ -7,6 +7,13 @@ import {clamp, getAutoRefreshTime, getParameters, saveInStorage, syncParameters}
 
 import cache from "./cache";
 import NOTIFICATIONS from "./NOTIFICATIONS";
+import {
+  EVENT_INPUT_OPTION_CHANGE, EVENT_INPUT_OPTION_CREDENTIALS_CHECK, EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE,
+  EVENT_INPUT_OPTION_SERVER_CHECK, EVENT_LOOP_AUTO_REFRESH, EVENT_OBTAIN_NBUNREADS, EVENT_OBTAIN_PARAMS,
+  EVENT_OBTAIN_RSS, EVENT_REQUEST_NBUNREADS, EVENT_REQUEST_PARAMS, EVENT_REQUEST_RSS, EVENT_REQUEST_SWAP,
+  NOTIFICATION_CREDENTIALS_CHECK_FAIL, NOTIFICATION_CREDENTIALS_CHECK_SUCCESS, NOTIFICATION_REFRESH_SUCCESS,
+  NOTIFICATION_SERVER_CHECK_FAIL, NOTIFICATION_SERVER_CHECK_SUCCESS, PARAM_NB_FETCH_ITEMS, PARAM_URL_API, PARAM_URL_MAIN
+} from "../both/constants";
 
 const manager = new EventsManager(true);
 
@@ -32,7 +39,7 @@ browser.alarms.onAlarm.addListener(alarm => {
   manager.fire(alarm.name, alarm);
 });
 
-browser.runtime.onMessage.addListener(({name='', ...data}) => {
+browser.runtime.onMessage.addListener(({name = '', ...data}) => {
   if (!name) return;
   manager.fire(name, data);
   
@@ -87,7 +94,7 @@ manager.on(EVENT_LOOP_AUTO_REFRESH, async () => {
   browser.browserAction.setBadgeBackgroundColor({
     color: nbunreads > 0 ? 'red' : 'green'
   });
-
+  
   return nbunreads > 0 && NOTIFICATIONS[NOTIFICATION_REFRESH_SUCCESS].create({message_substitutions: `${nbunreads}`})
 });
 
@@ -133,7 +140,7 @@ manager.on(EVENT_INPUT_OPTION_SERVER_CHECK, ({[PARAM_URL_MAIN]: url_main, [PARAM
     })
     .catch(error => {
       console.error(error);
-  
+      
       NOTIFICATIONS[NOTIFICATION_SERVER_CHECK_FAIL].create();
     });
   
@@ -154,7 +161,7 @@ manager.on(EVENT_INPUT_OPTION_CREDENTIALS_CHECK, () => {
     })
     .catch(err => {
       console.log(err);
-
+      
       NOTIFICATIONS[NOTIFICATION_CREDENTIALS_CHECK_FAIL].create();
     })
 });

@@ -1,11 +1,12 @@
 const path = require('path');
 const ManifestPlugin = require('./webpack/manifest-plugin');
+const {ProvidePlugin} = require('webpack');
+
+const BUILD_FOLDER = path.resolve(__dirname, 'extension');
 
 /**
  * @param {object} env
  * @param {string} env.patch
- *
- * @returns {*[]}
  */
 module.exports = [
   // background page config
@@ -15,7 +16,7 @@ module.exports = [
     },
     output: {
       filename: '[name]/main.js',
-      path: path.resolve(__dirname, 'extension'),
+      path: BUILD_FOLDER,
     },
     plugins: [
       new ManifestPlugin({
@@ -25,4 +26,43 @@ module.exports = [
       }),
     ]
   }),
+  // front pages config
+  {
+    entry: {
+      './front/options': './src/front/options/main.js',
+      './front/panel': './src/front/panel/main.js',
+    },
+    output: {
+      filename: '[name]/main.js',
+      path: BUILD_FOLDER,
+    },
+    plugins: [
+      new ProvidePlugin({
+        $: 'jquery',
+      }),
+    ],
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            'style-loader',
+            'css-loader',
+          ],
+        },
+        {
+          test: /\.html$/,
+          use: [
+            'html-loader',
+          ],
+        },
+        {
+          test: /\.(png|svg|jpg|gif)$/,
+          use: [
+            'file-loader',
+          ],
+        },
+      ],
+    },
+  },
 ];

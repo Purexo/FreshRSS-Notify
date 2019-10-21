@@ -18,8 +18,20 @@ module.exports = class ManifestPlugin {
   
       patch.push({
         op: "add",
-        path: "version",
+        path: "/version",
         value: pkg.version,
+      });
+  
+      patch.push({
+        op: "add",
+        path: "/author",
+        value: pkg.author,
+      });
+  
+      patch.push({
+        op: "add",
+        path: "/homepage_url",
+        value: pkg.homepage,
       });
       
       const manifest = JSON.stringify(
@@ -28,7 +40,6 @@ module.exports = class ManifestPlugin {
         4
       );
   
-      // await fs.writeFile(this.to, JSON.stringify(manifest, null, 4));
       compilation.emitAsset(this.to, {
         source: () => manifest,
         size: () => manifest.length,
