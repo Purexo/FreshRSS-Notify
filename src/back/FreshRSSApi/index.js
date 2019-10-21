@@ -2,6 +2,7 @@ import * as get from '../fetch';
 import PreferenceAdapter from "./PreferenceAdapter";
 import URLParams from "./URLParams";
 import QueryString from "./QueryString";
+import {PARAM_LOGIN, PARAM_PASSWORD_API, PARAM_URL_API} from "../../both/constants";
 
 class FreshRSSApi {
   constructor(preferenceAdapter = new PreferenceAdapter()) {

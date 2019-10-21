@@ -3,7 +3,7 @@ import browser from 'webextension-polyfill';
 import $ from 'jquery';
 import 'bootstrap';
 
-import './index.html';
+import './styles.scss';
 
 import {
   EVENT_INPUT_OPTION_CHANGE, EVENT_INPUT_OPTION_CREDENTIALS_CHECK,
@@ -18,7 +18,7 @@ $(function $_on_ready_handler() {
    * @param {HTMLInputElement} element
    * @returns {{paramname, value}}
    */
-  function getParamFromInput (element) {
+  function getParamFromInput(element) {
     return {
       paramname: element.name,
       value: element.value
@@ -27,19 +27,19 @@ $(function $_on_ready_handler() {
   
   /* --- Gestion generic des inputs du form --- */
   const $form = $('form');
-
+  
   /* --- locale loading --- */
   document.querySelectorAll('[data-locale-id]').forEach(element => {
     const localeId = element.getAttribute('data-locale-id');
     const substitutions = element.hasAttribute('data-locale-substitutions')
       ? element.getAttribute('data-locale-substitutions')
       : void 0;
-
+    
     const message = browser.i18n.getMessage(localeId, substitutions);
-
+    
     if (element.hasAttribute('data-locale-attribute')) {
       const attribute = element.getAttribute('data-locale-attribute');
-
+      
       element.setAttribute(attribute, message);
     } else {
       element.textContent = message;
@@ -54,7 +54,7 @@ $(function $_on_ready_handler() {
   });
   
   // Au change input, fire EVENT_INPUT_OPTION_CHANGE avec en données le nom du param et sa nouvelle valeur
-  $form.on('change', 'input', /** @this {HTMLInputElement}*/ function $form_input_on_change () {
+  $form.on('change', 'input', /** @this {HTMLInputElement}*/ function $form_input_on_change() {
     browser.runtime
       .sendMessage({name: EVENT_INPUT_OPTION_CHANGE, ...getParamFromInput(this)})
       .catch(console.error);
@@ -115,18 +115,18 @@ $(function $_on_ready_handler() {
   const $all_inputs = $form.find('input');
   
   // demande et récupère les params
-  browser.runtime.onMessage.addListener(({name=undefined, ...data}) => {
+  browser.runtime.onMessage.addListener(({name = undefined, ...data}) => {
     if (!name) return;
-
+    
     if (name === EVENT_OBTAIN_PARAMS) {
       const {params} = data;
-
+      
       $all_inputs.each(function $all_inputs_each() {
         this.value = params[this.name];
       });
     }
   });
-
+  
   browser.runtime
     .sendMessage({name: EVENT_REQUEST_PARAMS})
     .catch(console.error);

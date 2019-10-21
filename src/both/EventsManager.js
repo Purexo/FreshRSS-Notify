@@ -50,7 +50,7 @@ export default class EventsManager {
    */
   fire(name, ...args) {
     const dispatcher = this._getNameDispatcher(name);
-
+    
     if (this.debug) {
       console.debug(`event ${name} is fired with data :`, ...args);
       console.trace();
@@ -123,7 +123,7 @@ export default class EventsManager {
    * @memberOf EventsManager
    * @private
    */
-  _getNameDispatcher (name) {
+  _getNameDispatcher(name) {
     return this._dispatchers[name] || this._initNameDispatcher(name);
   }
 }

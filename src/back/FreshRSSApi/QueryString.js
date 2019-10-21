@@ -1,5 +1,5 @@
 export default class QueryString {
-  constructor (sep = '&', eq = '=') {
+  constructor(sep = '&', eq = '=') {
     this.sep = sep;
     this.eq = eq;
   }
@@ -9,7 +9,7 @@ export default class QueryString {
    * @param {string} str
    * @return {*}
    */
-  parse (str) {
+  parse(str) {
     return str
       .split(this.sep)
       .reduce((prev, entry) => {
@@ -43,7 +43,7 @@ export default class QueryString {
    * @param {Map} map - sanitized map <String, String>  idealy from URLParams.prototype.map()
    * @return {string}
    */
-  encode (map) {
+  encode(map) {
     const entries = [];
     for (let [key, value] of map) {
       if (Array.isArray(value)) {

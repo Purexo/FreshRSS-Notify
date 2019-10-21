@@ -2,31 +2,30 @@
   "manifest_version": 2,
   "name": "FreshRSS-Notify",
   "default_locale": "en",
-
+  "author": "Purexo (https://purexo.mom/)",
+  "homepage_url": "https://github.com/Purexo/FreshRSS-Notify#readme",
   "icons": {
     "64": "Assets/img/icon.png"
   },
-
   "permissions": [
     "<all_urls>",
     "storage",
     "alarms",
     "notifications"
   ],
-
   "background": {
-    "scripts": ["src/back/main.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
-
   "browser_action": {
     "default_icon": "Assets/img/icon.png",
     "default_title": "FreshRSS Notify",
-    "default_popup": "src/front/panel/index.html",
+    "default_popup": "front/panel/index.html",
     "browser_style": false
   },
-
   "options_ui": {
-    "page": "src/front/options/index.html",
+    "page": "front/options/index.html",
     "open_in_tab": true
   }
 }

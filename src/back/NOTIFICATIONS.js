@@ -1,4 +1,21 @@
 import {getParameters, requiredParam} from "./functions";
+import {
+  LOCALE_NOTIF_CREDENTIALS_CHECK_FAIL_MESSAGE,
+  LOCALE_NOTIF_CREDENTIALS_CHECK_FAIL_TITLE,
+  LOCALE_NOTIF_CREDENTIALS_CHECK_SUCCESS_MESSAGE,
+  LOCALE_NOTIF_CREDENTIALS_CHECK_SUCCESS_TITLE,
+  LOCALE_NOTIF_REFRESH_SUCCESS_MESSAGE,
+  LOCALE_NOTIF_REFRESH_SUCCESS_TITLE,
+  LOCALE_NOTIF_SERVER_CHECK_FAIL_MESSAGE,
+  LOCALE_NOTIF_SERVER_CHECK_FAIL_TITLE,
+  LOCALE_NOTIF_SERVER_CHECK_SUCCESS_MESSAGE,
+  LOCALE_NOTIF_SERVER_CHECK_SUCCESS_TITLE,
+  NOTIFICATION_CREDENTIALS_CHECK_FAIL,
+  NOTIFICATION_CREDENTIALS_CHECK_SUCCESS,
+  NOTIFICATION_REFRESH_SUCCESS,
+  NOTIFICATION_SERVER_CHECK_FAIL,
+  NOTIFICATION_SERVER_CHECK_SUCCESS, PARAM_ACTIVE_NOTIFICATIONS, PARAM_URL_MAIN
+} from "../both/constants";
 
 class Notification {
   /**
@@ -14,9 +31,10 @@ class Notification {
                 title,
                 message,
                 iconUrl = 'Assets/img/icon.png',
-                onClick = () => {},
+                onClick = () => {
+                },
                 isAuthorized = params => true
-  }) {
+              }) {
     this.notification_id = notification_id;
     
     this.default = {title, message, iconUrl};
@@ -31,7 +49,7 @@ class Notification {
     
     return iconPath;
   }
-
+  
   /**
    * @param {String?} title
    * @param {String|string[]?} title_substitutions
@@ -39,22 +57,22 @@ class Notification {
    * @param {String|string[]?} message_substitutions
    * @param {String?} iconUrl
    */
-  create({title, title_substitutions, message, message_substitutions, iconUrl}={}) {
+  create({title, title_substitutions, message, message_substitutions, iconUrl} = {}) {
     this._create({title, title_substitutions, message, message_substitutions, iconUrl})
       .catch(console.error)
   }
-
+  
   async _create({
-                  title=this.default.title, message=this.default.message,
+                  title = this.default.title, message = this.default.message,
                   title_substitutions, message_substitutions,
-                  iconUrl=this.default.iconUrl
-  }) {
+                  iconUrl = this.default.iconUrl
+                }) {
     const params = await getParameters();
     
     if (!this._isAuthorized(params)) {
       return;
     }
-
+    
     if (!title) {
       requiredParam('NOTIFICATIONS.prototype.create', 'title', 'no default value are setted');
     }
@@ -62,7 +80,7 @@ class Notification {
       requiredParam('NOTIFICATIONS.prototype.create', 'message', 'no default value are setted');
     }
     
-    iconUrl = NOTIFICATIONS.getURL(iconUrl);
+    iconUrl = Notification.getURL(iconUrl);
     
     return browser.notifications.create(this.notification_id, {
       type: 'basic', iconUrl,

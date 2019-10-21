@@ -2,17 +2,20 @@
  * Created by Purexo on 07/05/2017.
  */
 
-export function getAutoRefreshTime () {
+import browser from 'webextension-polyfill';
+import {DEFAULT_PARAMS, PARAM_REFRESH_TIME, STORAGE_GET_ALL_PARAMS} from "../both/constants";
+
+export function getAutoRefreshTime() {
   return browser.storage.local.get(PARAM_REFRESH_TIME)
     .then(param => param[PARAM_REFRESH_TIME] || DEFAULT_PARAMS[PARAM_REFRESH_TIME]);
 }
 
-export function saveInStorage (params) {
-  browser.storage.local.set(params);
-  browser.storage.sync.set(params);
+export function saveInStorage(params) {
+  browser.storage.local.set(params).catch(console.error);
+  browser.storage.sync.set(params).catch(console.error);
 }
 
-export function shouldSaveParams (checkedParams, oldParams) {
+export function shouldSaveParams(checkedParams, oldParams) {
   let persist = false;
   
   for (let name of STORAGE_GET_ALL_PARAMS) {
@@ -25,7 +28,7 @@ export function shouldSaveParams (checkedParams, oldParams) {
   return persist;
 }
 
-export function normalyzeParams (params) {
+export function normalyzeParams(params) {
   const checkedParams = Object.assign({}, DEFAULT_PARAMS, params);
   
   if (shouldSaveParams(checkedParams, params)) {
@@ -37,9 +40,9 @@ export function normalyzeParams (params) {
 
 export function syncParameters() {
   return Promise.all([
-      browser.storage.local.get(STORAGE_GET_ALL_PARAMS),
-      browser.storage.sync.get(STORAGE_GET_ALL_PARAMS)
-    ])
+    browser.storage.local.get(STORAGE_GET_ALL_PARAMS),
+    browser.storage.sync.get(STORAGE_GET_ALL_PARAMS)
+  ])
     .then(([local, sync]) => {
       for (let key of STORAGE_GET_ALL_PARAMS) {
         if (sync[key] === void 0) {
@@ -48,7 +51,7 @@ export function syncParameters() {
         if (local[key] === void 0) {
           local[key] = sync[key]
         }
-  
+        
         if (sync[key] === void 0) {
           sync[key] = DEFAULT_PARAMS[key];
         }
@@ -56,7 +59,7 @@ export function syncParameters() {
           local[key] = DEFAULT_PARAMS[key]
         }
       }
-  
+      
       local = normalyzeParams(local);
       saveInStorage(local);
       
