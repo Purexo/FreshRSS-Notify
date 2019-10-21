@@ -61,6 +61,7 @@
     "sass-loader": "^8.0.0",
     "webextension-toolbox": "^3.0.0"
   },
+  "dependencies": {},
   "webExt": {
     "ignoreFiles": [
       "**/*.map"
