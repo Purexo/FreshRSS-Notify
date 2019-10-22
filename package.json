@@ -1,6 +1,6 @@
 {
   "name": "freshrss-notify",
-  "version": "3.0.5",
+  "version": "3.1.0",
   "description": "Alert new unreads feeds",
   "private": true,
   "scripts": {
@@ -11,8 +11,8 @@
     "start": "npm run start:firefox",
     "prestart:firefox": "npm run build:firefox:dev",
     "start:firefox": "web-ext run --source-dir extension --firefox-profile FreshRSS --keep-profile-changes --start-url about:debugging --browser-console --verbose",
-    "prestart:chrome": "npm run build:firefox:chrome",
-    "start:chrome": "start chrome --profile-directory=FreshRSS --load-extension=%CD%\\extension chrome://extensions/",
+    "prestart:chrome": "npm run build:chrome",
+    "start:chrome": "node start_chrome.js",
     "deploy": "npm run deploy:firefox",
     "deploy-dev": "npm run deploy:firefox:dev",
     "predeploy:firefox": "npm run build:firefox:prod",
