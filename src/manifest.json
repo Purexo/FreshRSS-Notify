@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "FreshRSS-Notify",
+  "default_locale": "en",
+  "icons": {
+    "64": "Assets/img/icon.png"
+  },
+  "permissions": [
+    "<all_urls>",
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": "Assets/img/icon.png",
+    "default_title": "FreshRSS Notify",
+    "default_popup": "front/panel/index.html",
+    "browser_style": false
+  },
+  "options_ui": {
+    "page": "front/options/index.html",
+    "open_in_tab": true
+  }
+}

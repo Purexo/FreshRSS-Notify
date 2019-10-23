@@ -1,0 +1,131 @@
+@import "~bootstrap/scss/bootstrap";
+$fa-font-path: "~font-awesome/fonts/";
+@import "~font-awesome/scss/font-awesome";
+
+body {
+    height: 100%;
+    width: 100%;
+
+    overflow: hidden;
+
+    padding: 0;
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+html.isNotFirefox, html.isNotFirefox body {
+    max-height: 600px;
+    min-width: 600px;
+}
+
+html.isNotFirefox .rss-item-container.container-fluid {
+    max-height: 535px;
+}
+
+.rss-item-container.container-fluid {
+    min-height: 100px;
+    max-height: 541px;
+    max-width: 600px;
+    overflow-y: auto;
+}
+
+.rss-item-container {
+    position: relative;
+}
+
+.rss-item-container::-webkit-scrollbar {
+    position: fixed;
+}
+
+.rss-item-container::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+.rss-item-container::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.rss-item-container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #8C8C8C;
+}
+
+.fa {
+    font-size: 1.5em;
+}
+
+.navbar.navbar-fixed {
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar.navbar-expand-lg {
+    width: 100%;
+}
+
+.navbar.navbar-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar.navbar-sticky.navbar-sticky-top {
+    top: 0;
+}
+
+.navbar img.logo {
+    height: 30px;
+}
+
+.navbar-nav .nav-link {
+    padding: 0.5rem 0.75rem;
+}
+
+.nav-item {
+    text-align: center;
+    margin-left: 0.25em;
+    flex: 1;
+}
+
+.bg-secondary {
+    background-color: #2e3133 !important;
+}
+
+.rss-item .js-swap {
+    padding: 0.5rem;
+    margin-left: -0.5rem;
+}
+
+.rss-item a {
+    line-height: 1;
+    font-size: larger;
+    color: #a0a0a0;
+    font-weight: bolder;
+}
+
+.rss-item a:hover {
+    text-decoration: none;
+    color: #bebebe;
+}
+
+.rss-item a:visited {
+    color: grey;
+}
+
+.rss-item .tpl-rss-title {
+    flex: 1;
+}
+
+.rss-item img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+.rss-item .card-header {
+    padding: 0 1.25rem;
+}
