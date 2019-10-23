@@ -111,10 +111,7 @@ manager.on(EVENT_INPUT_OPTION_REFRESH_TIME_CHANGE, () => {
  * User have typed new options
  * store it in storage
  */
-manager.on(
-  EVENT_INPUT_OPTION_CHANGE,
-  ({paramname, value}) => saveInStorage({[paramname]: value})
-);
+manager.on(EVENT_INPUT_OPTION_CHANGE, saveInStorage);
 
 /**
  * Request params option from client page

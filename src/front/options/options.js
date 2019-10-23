@@ -49,10 +49,16 @@ import {
 } from "../../both/constants";
 import useTitle from "../hooks/useTitle";
 
-const __ = (localeId, substitutions) => browser.i18n.getMessage(localeId, substitutions);
+const __ = (localeId, substitutions) => browser.i18n.getMessage(
+  localeId,
+  typeof substitutions === 'number'
+    ? String(substitutions)
+    : substitutions
+);
 
 function OptionPage() {
   const [params, dispatch] = useParams();
+  
   useTitle(__(LOCALE_OPTION_HEAD_TITLE));
   
   const onButtonServerCheck = (event) => {
@@ -102,7 +108,7 @@ function OptionPage() {
             {__(LOCALE_OPTION_SERVER_SETTINGS_BTN_CHECK)}
           </button>
         </FieldSet>
-  
+        
         {/* Auth Settings */}
         <FieldSet legend={__(LOCALE_OPTION_AUTH_SETTINGS_TITLE)}>
           {/* Login */}
@@ -125,7 +131,7 @@ function OptionPage() {
             onChange={(e) => dispatch({type: PARAM_PASSWORD_API, value: e.target.value})}
             inputProps={{type: 'password'}}
           />
-    
+          
           <button className="btn btn-secondary" type="button" onClick={onButtonAuthCheck}>
             {__(LOCALE_OPTION_AUTH_SETTINGS_BTN_CHECK)}
           </button>
@@ -141,14 +147,14 @@ function OptionPage() {
             value={params[PARAM_REFRESH_TIME]}
             onChange={(e) => dispatch({type: PARAM_REFRESH_TIME, value: e.target.value})}
             inputProps={{type: 'range', min: 1, max: 30}}
-            renderInput={({uid, value, onChange, inputProps, helpuid}) => (
+            renderInput={({uid, value, onChange, inputProps, helpuid, detailuid = uid + '-detail'}) => (
               <div className="input-group" style={{alignItems: 'center'}}>
                 <input
                   id={uid} className="form-control" style={{height: '100%'}}
-                  aria-describedby={helpuid} aria-details={uid + '-detail'}
+                  aria-describedby={helpuid} aria-details={detailuid}
                   value={value} onChange={onChange} {...inputProps}
                 />
-                <div id={uid + '-detail'} className="input-group-addon">
+                <div id={detailuid} className="input-group-addon">
                   {__(LOCALE_OPTION_NOTIF_SETTINGS_UPDATE_DELAY_INDICATOR, value)}
                 </div>
               </div>
@@ -180,6 +186,6 @@ function OptionPage() {
 }
 
 ReactDOM.render(
-  <OptionPage />,
+  <OptionPage/>,
   document.getElementById('root'),
 );
