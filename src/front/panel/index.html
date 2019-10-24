@@ -8,49 +8,6 @@
     <script defer src="panel.js"></script>
 </head>
 <body class="bg-dark text-white">
-
-<nav class="navbar navbar-expand-lg navbar-light navbar-sticky navbar-sticky-top bg-secondary">
-    <a class="navbar-brand js-rss-instance-link" href="#" target="_blank">
-        <img class="logo" src="../../Assets/img/freshrss_logo.png" height="30" alt="logo">
-    </a>
-
-    <ul class="navbar-nav ml-auto d-flex flex-row justify-content-end w-25">
-        <li class="nav-item js-refresh">
-            <a class="nav-link btn btn-dark w-100" href="#" title="refresh">
-                <i class="fa fa-refresh"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link btn btn-dark w-100 js-rss-instance-link" href="#" target="_blank" title="unreads">
-                <i class="fa fa-envelope"></i>
-                <span class="js-nb-unreads">0</span>
-            </a>
-        </li>
-    </ul>
-</nav>
-
-<div class="container-fluid rss-item-container pt-2 pb-5" data-comment="mCustomScrollbar" data-mcs-theme="dark">
-
-</div>
-
-<template id="tpl-rss-item">
-    <div class="rss-item card w-100 bg-dark text-light mb-2" data-order="0">
-        <div class="card-header bg-secondary">
-            <div class="card-title mb-0 d-flex align-items-center">
-                <a href="#" target="_blank" class="js-swap d-flex align-items-center"><i class="fa"></i></a>
-                <a href="#" target="_blank" class="tpl-rss-title"></a>
-                <a href="#" class="js-collapse"><i class="fa fa-arrow-down"></i></a>
-            </div>
-        </div>
-        <div class="card-body collapse" data-parent=".rss-item">
-            <div class="card-text tpl-rss-content">Some quick example text to build on the card title and make up the
-                bulk of the card's content.
-            </div>
-        </div>
-        <div class="card-footer bg-secondary">
-            <a href="#" target="_blank" class="tpl-rss-origin-title"></a>
-        </div>
-    </div>
-</template>
+    <div id="root"></div>
 </body>
 </html>

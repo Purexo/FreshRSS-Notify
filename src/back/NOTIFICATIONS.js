@@ -16,6 +16,7 @@ import {
   NOTIFICATION_SERVER_CHECK_FAIL,
   NOTIFICATION_SERVER_CHECK_SUCCESS, PARAM_ACTIVE_NOTIFICATIONS, PARAM_URL_MAIN
 } from "../both/constants";
+import openLink from "../both/openLink";
 
 class Notification {
   /**
@@ -132,7 +133,7 @@ const NOTIFICATIONS = {
     onClick() {
       getParameters()
         .then(params => params[PARAM_URL_MAIN])
-        .then(url => browser.tabs.create({active: true, url}));
+        .then(url => openLink(url, true));
     }
   })
 };

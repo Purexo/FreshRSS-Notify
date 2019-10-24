@@ -1,9 +1,8 @@
-import ruid from "../libs/ruid";
-import React, {useState} from "react";
+import React from "react";
 import useUid from "../hooks/useUid";
 
 export default function FormCheck({label, help, checked, value, uid: _uid}) {
-  const [uid, helpuid] = useUid(_uid);
+  const [, helpuid] = useUid(_uid);
   
   return (
     <div className="form-check">

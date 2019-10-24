@@ -1,177 +1,167 @@
 import browser from 'webextension-polyfill';
 
-import $ from 'jquery';
-import 'bootstrap';
 import DOMPurify from 'dompurify';
 
+import React, {useState, useEffect} from 'react';
+import ReactDOM from 'react-dom';
+
+import useNbUnreads from "../hooks/useNbUnreads";
+import useRSSFeeds from "../hooks/useRSSFeeds";
+import useParams from "../hooks/useParams";
+
+import NavBar from "../components/NavBar";
+import Icon from "../components/Icon";
+import openLink from '../../both/openLink';
+
+import 'bootstrap';
 import './styles.scss';
 
-import EventsManager from "../../both/EventsManager";
 import {
-  EVENT_OBTAIN_NBUNREADS, EVENT_OBTAIN_PARAMS,
-  EVENT_OBTAIN_RSS,
-  EVENT_REQUEST_NBUNREADS, EVENT_REQUEST_PARAMS,
-  EVENT_REQUEST_RSS, EVENT_REQUEST_SWAP, LOCALE_PANEL_BTN_REFRESH_TITLE, LOCALE_PANEL_BTN_UNREADS_TITLE, PARAM_URL_MAIN
+  EVENT_REQUEST_RSS,
+  EVENT_REQUEST_SWAP,
+  PARAM_URL_MAIN
 } from "../../both/constants";
-import getTemplate from '../libs/template';
 
-document.body.parentElement.classList.add((typeof InstallTrigger !== 'undefined') ? 'isFirefox' : 'isNotFirefox');
+function RSSItem({rss, onSwapItem}) {
+  const {id, isRead: isRead_, origin, link, title, content} = rss;
+  const [isRead, setIsRead] = useState(isRead_);
+  const [collapse, setCollapse] = useState(true);
+  
+  const docHTML = new DOMParser().parseFromString(DOMPurify.sanitize(content), 'text/html');
+  
+  const attachHtmlContent = node => {
+    if (!node) return;
 
-let background;
-const manager = new EventsManager();
-
-function listenRuntimeMessage() {
-  browser.runtime.onMessage.addListener(({name = undefined, ...data}) => {
-    if (!name) return;
-    
-    manager.fire(name, data);
-  });
-}
-
-function renewFromCache({rss, unreads, params}) {
-  if (rss) {
-    for (let [id, item] of rss) {
-      manager.fire(EVENT_OBTAIN_RSS, {id, rss: item});
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
     }
-  } else {
-    browser.runtime.sendMessage({name: EVENT_REQUEST_RSS}).catch(console.error);
-  }
+
+    while (docHTML.body.hasChildNodes()) {
+      node.appendChild(docHTML.body.firstChild);
+    }
+    
+    node.querySelectorAll('a')
+      .forEach(a => a.addEventListener('click', event => {
+        event.preventDefault();
+        
+        a.target = '_blank';
+        openLink(a.href);
+      }));
+  };
   
-  unreads
-    ? manager.fire(EVENT_OBTAIN_NBUNREADS, {nbunreads: unreads})
-    : browser.runtime.sendMessage({name: EVENT_REQUEST_NBUNREADS}).catch(console.error);
+  const onSwapClick = (event) => {
+    event.preventDefault();
   
-  params
-    ? manager.fire(EVENT_OBTAIN_PARAMS, {params})
-    : browser.runtime.sendMessage({name: EVENT_REQUEST_PARAMS}).catch(console.error);
+    onSwapItem(rss);
+    setIsRead(isRead => !isRead);
+  };
+  
+  const onTitleClick = (event) => {
+    event.preventDefault();
+  
+    openLink(link, true);
+  };
+  
+  return (
+    <div className="rss-item card w-100 bg-dark text-light mb-2" style={{order: id}}>
+      <div className="card-header bg-secondary">
+        <div className="card-title mb-0 d-flex align-items-center">
+          <a className="js-swap d-flex align-items-center" onClick={onSwapClick} href="#">
+            {
+              isRead
+                ? <Icon faIcon="envelope-open-o" className="text-secondary"/>
+                : <Icon faIcon="envelope-o" className="text-danger"/>
+            }
+          </a>
+          <a className="tpl-rss-title" onClick={onTitleClick} href={link}>
+            {title}
+          </a>
+          <a onClick={() => setCollapse(c => !c)} href="#">
+            {collapse ? <Icon faIcon="arrow-down" /> : <Icon faIcon="arrow-up" /> }
+          </a>
+        </div>
+      </div>
+      <div className={`card-body p-2 ${collapse ? 'collapse' : ''}`}>
+        <div className="card-text" ref={attachHtmlContent}></div>
+      </div>
+      <div className="card-footer bg-secondary">
+        <a href={origin.htmlUrl || origin.url} target="_blank">
+          {origin.title}
+        </a>
+      </div>
+    </div>
+  );
 }
 
-(async function () {
-  background = await browser.runtime.getBackgroundPage();
-  const $container = $('.rss-item-container');
-  const $unreads = $('.js-nb-unreads');
-  const $btn_refresh = $('.js-refresh');
-  const $rss_instance_links = $('.js-rss-instance-link');
+function Panel() {
+  const [params] = useParams();
+  const nbUnreads_ = useNbUnreads();
+  const [nbUnreads, setNbUnreads] = useState(nbUnreads_);
+  const feeds = useRSSFeeds();
+
+  useEffect(() => setNbUnreads(nbUnreads_), [nbUnreads_]); // follow unreads change
   
-  $rss_instance_links.on('click', event => {
+  const openFreshRSSInstance = (event) => {
     event.preventDefault();
     
-    browser.tabs.create({active: true, url: event.currentTarget.getAttribute('href')})
-      .catch(console.error)
-  });
+    openLink(params[PARAM_URL_MAIN], true);
+  };
   
-  $btn_refresh.on(
-    'click',
-    () => browser.runtime
+  const onRefreshClick = () => browser.runtime
       .sendMessage({name: EVENT_REQUEST_RSS, runNow: true})
-      .catch(console.error)
-  );
-  
-  $btn_refresh.find('a')
-    .attr('title', browser.i18n.getMessage(LOCALE_PANEL_BTN_REFRESH_TITLE));
-  $rss_instance_links.last().attr('title', browser.i18n.getMessage(LOCALE_PANEL_BTN_UNREADS_TITLE));
-  
-  manager.on(EVENT_OBTAIN_NBUNREADS, ({nbunreads}) => $unreads.text(nbunreads));
-  manager.on(EVENT_OBTAIN_RSS, ({id, rss}) => {
-    // remove old item
-    $container.find(`.rss-item[data-order=${rss.id}]`).remove();
-    
-    const $rss_item = $(getTemplate('tpl-rss-item')).find('.rss-item');
-    $container.append($rss_item);
-    
-    $rss_item
-      .attr('data-order', rss.id)
-      .attr('data-id', rss.itemid)
-      .css('order', rss.id);
-    
-    const $swap_icon = $rss_item.find('.js-swap .fa');
-    const $body_collapser = $rss_item.find('.js-collapse');
-    const $rss_body = $rss_item.find('.card-body');
-    const $collapse_icon = $rss_item.find('.js-collapse .fa');
-    
-    $body_collapser.on('click', event => $rss_body.collapse('toggle'));
-    
-    $rss_body
-      .on('show.bs.collapse', event => {
-        $collapse_icon.removeClass('fa-arrow-down');
-        $collapse_icon.addClass('fa-arrow-up');
-      })
-      .on('hide.bs.collapse', event => {
-        $collapse_icon.removeClass('fa-arrow-up');
-        $collapse_icon.addClass('fa-arrow-down');
-      });
-    
-    const classToAdd = rss.isRead
-      ? ['fa-envelope-open-o', 'text-secondary']
-      : ['fa-envelope-o', 'text-danger'];
-    
-    classToAdd.forEach(cls => $swap_icon.addClass(cls));
-    
-    $rss_item.find('.tpl-rss-title')
-      .on('click', event => {
-        event.preventDefault();
-        
-        browser.tabs.create({active: true, url: event.currentTarget.getAttribute('href')})
-          .catch(console.error)
-      })
-      .attr('href', rss.link)
-      .text(rss.title);
-    
-    const docHTML = new DOMParser().parseFromString(DOMPurify.sanitize(rss.content), 'text/html');
-    const rssContent = $rss_item.find('.tpl-rss-content')
-      .on('click', 'a', event => {
-        event.preventDefault();
-        
-        browser.tabs.create({active: false, url: event.currentTarget.getAttribute('href')})
-          .catch(console.error)
-      })
-      .get(0);
-    
-    while (rssContent.hasChildNodes()) {
-      rssContent.firstChild.remove();
-    }
-    
-    while (docHTML.body.hasChildNodes()) {
-      rssContent.appendChild(docHTML.body.firstChild);
-    }
-    
-    $rss_item.find('.tpl-rss-origin-title')
-      .attr('href', rss.origin.htmlUrl || rss.origin.url)
-      .text(rss.origin.title);
-    
-    $rss_item.find('.js-swap').on('click', event => {
-      event.preventDefault();
-      
-      browser.runtime.sendMessage({
-        name: EVENT_REQUEST_SWAP,
-        itemid: rss.itemid,
-        isRead: rss.isRead,
-      }).catch(console.error);
-      
-      // update count
-      let count = Number($unreads.text());
-      count = count + (rss.isRead ? +1 : -1);
-      $unreads.text(count);
+      .catch(console.error);
+
+  function onSwapItem({itemid, isRead}) {
+    browser.runtime.sendMessage({
+      name: EVENT_REQUEST_SWAP,
+      itemid, isRead,
+    }).catch(console.error);
+
+    setNbUnreads(count => {
+      count = count + (isRead ? +1 : -1);
       
       browser.browserAction.setBadgeText({text: `${count}`});
       browser.browserAction.setBadgeBackgroundColor({
         color: count > 0 ? 'red' : 'green'
       });
+    });
+  }
+  
+  return (
+    <>
+      <NavBar
+        brand={<NavBar.Brand
+          image="/Assets/img/freshrss_logo.png"
+          onClick={openFreshRSSInstance}
+        />}
+      >
+        <NavBar.Item title="refresh" faIcon="refresh" onClick={onRefreshClick}/>
+        <NavBar.Item title="unreads" faIcon="envelope" onClick={openFreshRSSInstance}>
+          <span>{nbUnreads}</span>
+        </NavBar.Item>
+      </NavBar>
       
-      rss.isRead = !rss.isRead;
-      
-      ['fa-envelope-open-o', 'fa-envelope-o', 'text-secondary', 'text-danger']
-        .forEach(cls => $swap_icon.toggleClass(cls));
-    })
-  });
-  
-  manager.on(
-    EVENT_OBTAIN_PARAMS,
-    ({params}) => $rss_instance_links.attr('href', params[PARAM_URL_MAIN])
-  );
-  
-  listenRuntimeMessage();
-  
-  background.cache.params = null;
-  renewFromCache(background.cache);
-})();
+      <div
+        className="container-fluid rss-item-container pt-2 pb-5"
+        data-comment="mCustomScrollbar"
+        data-mcs-theme="dark"
+      >
+        {
+          [...feeds.values()].map(rss => (
+            <RSSItem
+              key={rss.itemid}
+              rss={rss}
+              onSwapItem={onSwapItem}
+            />
+          ))
+        }
+      </div>
+    </>
+  )
+}
+
+document.body.parentElement.classList.add((typeof InstallTrigger !== 'undefined') ? 'isFirefox' : 'isNotFirefox');
+ReactDOM.render(
+  <Panel />,
+  document.getElementById('root')
+);
