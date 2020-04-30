@@ -44,7 +44,7 @@
     "font-awesome": "^4.7.0",
     "html-loader": "^0.5.5",
     "jiff": "^0.7.3",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "popper.js": "^1.16.0",
     "precss": "^4.0.0",
     "style-loader": "^1.0.0",
