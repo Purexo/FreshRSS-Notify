@@ -1,6 +1,6 @@
 {
   "name": "freshrss-notify",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Alert new unreads feeds",
   "private": true,
   "scripts": {
@@ -16,9 +16,9 @@
     "deploy": "npm run deploy:firefox",
     "deploy-dev": "npm run deploy:firefox:dev",
     "predeploy:firefox": "npm run build:firefox:prod",
-    "deploy:firefox": "web-ext sign --id freshrss-notify@purexo.mom --source-dir extension",
+    "deploy:firefox": "web-ext sign --source-dir extension",
     "predeploy:firefox:dev": "npm run build:firefox:dev",
-    "deploy:firefox:dev": "web-ext sign --id freshrss-notify-dev@purexo.mom --source-dir extension"
+    "deploy:firefox:dev": "web-ext sign --source-dir extension"
   },
   "repository": {
     "type": "git",
@@ -48,7 +48,8 @@
     "jquery": "^3.5.1",
     "node-sass": "^4.14.1",
     "popper.js": "^1.16.0",
-    "postcss-loader": "^3.0.0",
+    "postcss": "^8.0.9",
+    "postcss-loader": "^4.0.2",
     "precss": "^4.0.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
@@ -61,7 +62,6 @@
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.9"
   },
-  "dependencies": {},
   "webExt": {
     "ignoreFiles": [
       "**/*.map"

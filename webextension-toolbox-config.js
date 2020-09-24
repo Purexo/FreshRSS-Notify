@@ -34,13 +34,19 @@ module.exports = {
           {
             loader: 'postcss-loader', // Run post css actions
             options: {
-              plugins: function () { // post css plugins, can be exported to postcss.config.js
-                return [
+              postcssOptions: {
+                plugins: [
+                  [
+                    'postcss-preset-env',
+                    {
+                      // Options
+                    },
+                  ],
                   require('precss'),
                   require('autoprefixer'),
-                ];
-              }
-            }
+                ],
+              },
+            },
           },
           'sass-loader'
         ],
