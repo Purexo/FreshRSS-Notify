@@ -48,7 +48,7 @@
     "jquery": "^3.5.1",
     "node-sass": "^4.14.1",
     "popper.js": "^1.16.0",
-    "postcss": "^8.0.9",
+    "postcss": "^8.2.10",
     "postcss-loader": "^4.0.2",
     "precss": "^4.0.0",
     "react": "^16.10.2",
